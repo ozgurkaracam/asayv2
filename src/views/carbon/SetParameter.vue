@@ -210,9 +210,8 @@ export default {
   },
   methods: {
     deleteDay(i) {
-      let index = this.datesToBeAdded.findIndex(v => v.dayIndex = i);
+      let index = this.datesToBeAdded.findIndex(v => v.dayIndex == i);
       if (index != -1) {
-
         this.datesToBeAdded.splice(index, 1);
       }
     },
@@ -244,6 +243,16 @@ export default {
       this.selectedDay = 0;
       this.endTime = null;
       this.startTime = null;
+
+      this.datesToBeAdded.sort( function( a, b ) {
+        if ( a.dayIndex < b.dayIndex ){
+          return -1;
+        }
+        if ( a.dayIndex > b.dayIndex ){
+          return 1;
+        }
+        return 0;
+      } );
 
     },
     saveDataInTheDB() {

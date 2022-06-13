@@ -50,7 +50,12 @@
       </div>
       <div class="row mb-7">
         <div class="text-right col-lg-10">
-          <button type="button" class="btn btn-primary" @click="saveData">
+          <button
+            :disabled="loading"
+            type="button"
+            class="btn btn-primary"
+            @click="postForm"
+          >
             Rapor Al
           </button>
         </div>
@@ -76,7 +81,47 @@ export default {
     return {
       selectedDate: "",
       selectedCategory: null,
+      loading: false,
     };
+  },
+  methods: {
+    postForm() {
+      this.loading = true;
+      axios
+        .post(
+          "branches/export",
+          {
+            month: this.selectedDate.month,
+            year: this.selectedDate.year,
+            filters: this.selectedCategory,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${JwtService.getToken()}`,
+              Accept: "application/json",
+              responseType: "blob",
+            },
+          }
+        )
+        .then((res) => {
+          const url = window.URL.createObjectURL(new Blob([res.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "downloaded.xls"); //or any other extension
+          document.body.appendChild(link);
+          link.click();
+          return res;
+        })
+        .catch((err) => {
+          Swal.fire({
+            title: err.response.data.message,
+            icon: "error",
+          });
+        })
+        .finally((x) => {
+          this.loading = false;
+        });
+    },
   },
   computed: {
     getCurrentMonth() {
