@@ -147,7 +147,7 @@ export default defineComponent({
         }).then(function () {
           // Go to page after successfully login
         });
-
+        await store.dispatch(Actions.GET_ALL_MENUS);
         router.push({ name: "dashboard" });
       } else {
         Swal.fire({

@@ -14,8 +14,14 @@
     <div class="card-body p-9">
       <div class="row mb-7 subBlock justify-content-center">
         <div class="col-lg-5">
-          <label class="fw-bold text-muted">Fatura Başlangıç Tarihi</label>
+          <label
+            class="fw-bold text-muted"
+            style="cursor: pointer"
+            @click="startDateMode = !startDateMode"
+            >Fatura Başlangıç Tarihi</label
+          >
           <DatePicker
+            v-show="startDateMode"
             class="datePicker"
             v-model="billBeginDate"
             mode="date"
@@ -24,8 +30,14 @@
           </DatePicker>
         </div>
         <div class="col-lg-5 innerBlock">
-          <label class="fw-bold text-muted">Fatura Bitiş Tarihi</label>
+          <label
+            class="fw-bold text-muted"
+            style="cursor: pointer"
+            @click="endDateMode = !endDateMode"
+            >Fatura Bitiş Tarihi</label
+          >
           <DatePicker
+            v-show="endDateMode"
             class="datePicker"
             v-model="billEndDate"
             mode="date"
@@ -127,6 +139,8 @@ export default {
   components: { VueElementLoading },
   data() {
     return {
+      startDateMode: false,
+      endDateMode: false,
       branchList: null,
       selectedBranch: null,
       billBeginDate: null,
