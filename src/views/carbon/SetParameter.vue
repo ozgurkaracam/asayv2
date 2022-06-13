@@ -24,16 +24,13 @@
         <!--begin::Label-->
 
         <!--begin::Col-->
-        <div class="col-lg-3">
+        <div class="col-lg-6">
           <label class="fw-bold required text-muted">Tarih seçimi:</label>
-          <DatePicker
-            v-model="selectedDate"
-            mode="date"
-            is24hr
-            :min-date="getMinSelectableDate"
-            :max-date="getMaxSelectableDate"
-          >
-          </DatePicker>
+          <select name="" v-model="selectedDay" id="" class="form-control">
+            <option v-for="(day, key) in days" v-bind:key="key" :value="day.id">
+              {{ day.dayTR }}
+            </option>
+          </select>
         </div>
       </div>
       <div class="row mb-7 justify-content-center">
@@ -96,6 +93,7 @@
                 <th scope="col">Gün</th>
                 <th scope="col">Başlangıç Saati</th>
                 <th scope="col">Bitiş Saati</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
@@ -104,6 +102,14 @@
                 <td>{{ item.dayText }}</td>
                 <td>{{ item.start_at }}</td>
                 <td>{{ item.finish_at }}</td>
+                <td>
+                  <button
+                    class="btn-danger btn"
+                    @click="deleteDay(item.dayIndex)"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -126,19 +132,21 @@
 <script>
 /* eslint-disable */
 import moment from "moment";
-import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
+import {setCurrentPageBreadcrumbs} from "@/core/helpers/breadcrumb";
 import JwtService from '@/core/services/JwtService';
 import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import axios from "axios";
 import VueElementLoading from "vue-element-loading";
-import { useStore } from "vuex";
-import { Actions, Mutations } from "@/store/enums/StoreEnums";
+import {useStore} from "vuex";
+import {Actions, Mutations} from "@/store/enums/StoreEnums";
 
 export default {
   name: "account-overview",
   components: {VueElementLoading},
   data() {
     return {
+      dayss: ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"],
+      selectedDay: 0,
       selectedDate: null,
       minSelectableDate: null,
       maxSelectableDate: null,
@@ -152,14 +160,14 @@ export default {
       selectedBranch: null,
       store: useStore(),
       days: [
-              {id: 0,  dayTR: "Pazartesi", dayEN: "Monday"},
-              {id: 1,  dayTR: "Salı", dayEN: "Tuesday"},
-              {id: 2,  dayTR: "Çarşamba", dayEN: "Wednesday"},
-              {id: 3,  dayTR: "Perşembe", dayEN: "Thursday"},
-              {id: 4,  dayTR: "Cuma", dayEN: "Friday"},
-              {id: 5,  dayTR: "Cumartesi", dayEN: "Saturday"},
-              {id: 6,  dayTR: "Pazar", dayEN: "Sunday"},
-            ],
+        {id: 0, dayTR: "Pazartesi", dayEN: "Monday"},
+        {id: 1, dayTR: "Salı", dayEN: "Tuesday"},
+        {id: 2, dayTR: "Çarşamba", dayEN: "Wednesday"},
+        {id: 3, dayTR: "Perşembe", dayEN: "Thursday"},
+        {id: 4, dayTR: "Cuma", dayEN: "Friday"},
+        {id: 5, dayTR: "Cumartesi", dayEN: "Saturday"},
+        {id: 6, dayTR: "Pazar", dayEN: "Sunday"},
+      ],
     };
   },
   created() {
@@ -201,23 +209,43 @@ export default {
     setCurrentPageBreadcrumbs("Parametre Tanımlama", ["Karbon Ayak İzi"]);
   },
   methods: {
+    deleteDay(i) {
+      let index = this.datesToBeAdded.findIndex(v => v.dayIndex = i);
+      if (index != -1) {
+
+        this.datesToBeAdded.splice(index, 1);
+      }
+    },
     saveDataInTheTable() {
-        let startedDateString = moment(this.selectedDate).format("dddd").toLocaleString("tr-TR");
-        this.days.forEach((value) => {
-          if (value.dayTR == startedDateString || value.dayEN == startedDateString) {
-            this.datesToBeAdded.push({
-              dayIndex: value.id,
-              dayText: value.dayTR,
-              start_at: this.startTime,
-              finish_at: this.endTime
-            })
-            this.selectedDate = null;
-            startedDateString = null;
-            this.startTime = null;
-            this.endTime = null;
-          }
+      if (!this.startTime || !this.endTime || !this.scenarioName || !this.selectedBranch) {
+
+        Swal.fire({
+          icon: "error",
+          title: "Boş alan bırakmayınız!"
         })
-      },
+        return;
+      }
+      let index = this.datesToBeAdded.findIndex(val => val.dayIndex == this.days[this.selectedDay].id)
+      if (index == -1)
+        this.datesToBeAdded.push({
+          dayIndex: this.days[this.selectedDay].id,
+          dayText: this.days[this.selectedDay].dayTR,
+          start_at: this.startTime,
+          finish_at: this.endTime
+        })
+      else {
+        this.datesToBeAdded[index] = {
+          dayIndex: this.days[this.selectedDay].id,
+          dayText: this.days[this.selectedDay].dayTR,
+          start_at: this.startTime,
+          finish_at: this.endTime
+        };
+      }
+      this.selectedDay = 0;
+      this.endTime = null;
+      this.startTime = null;
+
+    },
     saveDataInTheDB() {
       this.datesToBeAdded.forEach((value) => {
         delete value.dayText;
@@ -236,37 +264,36 @@ export default {
             Accept: "application/json"
           }
         })
-        .then((response) => {
-          if (response?.data) {
-            this.loading = false;
-            Swal.fire({
-              title: "İşlem Başarılı",
-              text: "Çalışma Senaryoları başarılı bir şekilde kaydedilmiştir.",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Tamam",
-              customClass: {
-                confirmButton: "btn fw-bold btn-light-primary",
-              },
-            }).then(function () {
-              window.location.reload();
-            });
-          }
-        })
-      }
-      else {
-            Swal.fire({
-              title: "İşlem Başarısız",
-              text: "Çalışma Senaryolarını kaydedebilmek için tüm alanları doldurmanız gerekmektedir.",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Tamam",
-              customClass: {
-                confirmButton: "btn fw-bold btn-light-primary",
-              },
-            }).then(function () {
-              window.location.reload();
-            });
+            .then((response) => {
+              if (response?.data) {
+                this.loading = false;
+                Swal.fire({
+                  title: "İşlem Başarılı",
+                  text: "Çalışma Senaryoları başarılı bir şekilde kaydedilmiştir.",
+                  icon: "success",
+                  buttonsStyling: false,
+                  confirmButtonText: "Tamam",
+                  customClass: {
+                    confirmButton: "btn fw-bold btn-light-primary",
+                  },
+                }).then(function () {
+                  window.location.reload();
+                });
+              }
+            })
+      } else {
+        Swal.fire({
+          title: "İşlem Başarısız",
+          text: "Çalışma Senaryolarını kaydedebilmek için tüm alanları doldurmanız gerekmektedir.",
+          icon: "success",
+          buttonsStyling: false,
+          confirmButtonText: "Tamam",
+          customClass: {
+            confirmButton: "btn fw-bold btn-light-primary",
+          },
+        }).then(function () {
+          window.location.reload();
+        });
       }
     }
   }
@@ -277,23 +304,28 @@ export default {
 .el-select {
   width: 100%;
 }
+
 .dateSelector {
   width: 100%;
   height: 40px;
 }
+
 @media only screen and (max-width: 991px) {
   .subBlock {
     margin-top: 5%;
   }
+
   .btnSaveData {
     margin-top: 3%;
   }
 }
+
 @media only screen and (min-width: 992px) {
   .btnSaveData {
     margin-top: 3%;
   }
 }
+
 @media only screen and (min-width: 1500px) {
   .btnSaveData {
     margin-top: 2%;
