@@ -224,7 +224,7 @@ export default defineComponent({
       value.created_at = dateTime.toLocaleString();
     });
     onMounted(() => {
-      setCurrentPageBreadcrumbs("Kullanıcı Listesi", ["Apps", "Users"]);
+      setCurrentPageBreadcrumbs("Kullanıcı İşlemleri", []);
     });
 
     // const deleteFewCustomers = () => {

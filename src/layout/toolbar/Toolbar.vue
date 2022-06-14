@@ -35,7 +35,7 @@
         >
           <li class="breadcrumb-item pe-3">
             <router-link to="/dashboard" class="text-muted text-hover-primary">
-              Home
+              Anasayfa
             </router-link>
           </li>
           <li class="breadcrumb-item">
