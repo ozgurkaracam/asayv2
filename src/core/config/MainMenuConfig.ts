@@ -136,6 +136,10 @@ const DocMenuConfig = [
             heading: "Şubeler",
             route: "/carbonfootprint/branches",
           },
+          {
+            heading: "Anket",
+            route: "/questions",
+          },
         ],
       },
     ],

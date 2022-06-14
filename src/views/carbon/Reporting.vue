@@ -99,18 +99,18 @@ export default {
             headers: {
               Authorization: `Bearer ${JwtService.getToken()}`,
               Accept: "application/json",
-              responseType: "blob",
+              responseType:
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             },
           }
         )
-        .then((res) => {
-          const url = window.URL.createObjectURL(new Blob([res.data]));
+        .then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement("a");
           link.href = url;
-          link.setAttribute("download", "downloaded.xls"); //or any other extension
+          link.setAttribute("download", "downloaded.xlsx");
           document.body.appendChild(link);
           link.click();
-          return res;
         })
         .catch((err) => {
           Swal.fire({

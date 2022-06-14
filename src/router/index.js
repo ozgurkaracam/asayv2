@@ -114,6 +114,11 @@ const routes = [
         name: "Şubeler",
         component: () => import("@/views/carbon/BranchList.vue"),
       },
+      {
+        path: "/questions",
+        name: "Anket",
+        component: () => import("@/views/Questions.vue"),
+      },
       // {
       //   path: "/apps/customers/getting-started",
       //   name: "apps-customers-getting-started",
