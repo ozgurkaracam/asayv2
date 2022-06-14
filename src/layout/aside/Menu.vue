@@ -18,12 +18,18 @@
       data-kt-menu="true"
     >
       <template v-for="(menuItem, j) in ChangedMenus" :key="j">
-        <template v-if="menuItem.heading">
+        <template
+          v-if="
+            menuItem.name &&
+            !menuItem.parent_id &&
+            (!menuItem.submenus || menuItem.submenus.length == 0)
+          "
+        >
           <div class="menu-item">
             <router-link
               class="menu-link"
               active-class="active"
-              :to="menuItem.route"
+              :to="'/' + menuItem.slug"
             >
               <span
                 v-if="menuItem.svgIcon || menuItem.fontIcon"
@@ -41,12 +47,17 @@
                   <inline-svg :src="menuItem.svgIcon" />
                 </span>
               </span>
-              <span class="menu-title">{{ translate(menuItem.heading) }}</span>
+              <span class="menu-title">{{ menuItem.name }}</span>
             </router-link>
           </div>
         </template>
         <div
-          v-if="menuItem.sectionTitle"
+          v-if="
+            menuItem.name &&
+            !menuItem.parent_id &&
+            menuItem.submenus &&
+            menuItem.submenus.length > 0
+          "
           :class="{ show: hasActiveChildren(menuItem.route) }"
           class="menu-item menu-accordion"
           data-kt-menu-sub="accordion"
@@ -69,31 +80,26 @@
                 <inline-svg :src="menuItem.svgIcon" />
               </span>
             </span>
-            <span class="menu-title">{{
-              translate(menuItem.sectionTitle)
-            }}</span>
+            <span class="menu-title"> {{ menuItem.name }}</span>
             <span class="menu-arrow"></span>
           </span>
-          <div
-            :class="{ show: hasActiveChildren(menuItem.route) }"
-            class="menu-sub menu-sub-accordion"
-          >
-            <template v-for="(item2, k) in menuItem.sub" :key="k">
-              <div v-if="item2.heading" class="menu-item">
+          <div :class="{ show: false }" class="menu-sub menu-sub-accordion">
+            <template v-for="(item2, k) in menuItem.submenus" :key="k">
+              <div v-if="!item2.submenus" class="menu-item">
                 <router-link
                   class="menu-link"
                   active-class="active"
-                  :to="item2.route"
+                  :to="'/' + item2.slug"
                 >
                   <span class="menu-bullet">
                     <span class="bullet bullet-dot"></span>
                   </span>
-                  <span class="menu-title">{{ translate(item2.heading) }}</span>
+                  <span class="menu-title">{{ item2.name }}</span>
                 </router-link>
               </div>
               <div
-                v-if="item2.sectionTitle"
-                :class="{ show: hasActiveChildren(item2.route) }"
+                v-if="item2.submenus"
+                :class="{ show: item2.submenus }"
                 class="menu-item menu-accordion"
                 data-kt-menu-sub="accordion"
                 data-kt-menu-trigger="click"
@@ -102,16 +108,14 @@
                   <span class="menu-bullet">
                     <span class="bullet bullet-dot"></span>
                   </span>
-                  <span class="menu-title">{{
-                    translate(item2.sectionTitle)
-                  }}</span>
+                  <span class="menu-title">{{ item2.name }}</span>
                   <span class="menu-arrow"></span>
                 </span>
                 <div
-                  :class="{ show: hasActiveChildren(item2.route) }"
+                  :class="{ show: item2.submenus }"
                   class="menu-sub menu-sub-accordion"
                 >
-                  <template v-for="(item3, k) in item2.sub" :key="k">
+                  <template v-for="(item3, k) in item2.submenus" :key="k">
                     <div v-if="item3.heading" class="menu-item">
                       <router-link
                         class="menu-link"
@@ -121,9 +125,7 @@
                         <span class="menu-bullet">
                           <span class="bullet bullet-dot"></span>
                         </span>
-                        <span class="menu-title">{{
-                          translate(item3.heading)
-                        }}</span>
+                        <span class="menu-title">{{ item3.name }}</span>
                       </router-link>
                     </div>
                   </template>
@@ -196,17 +198,18 @@ export default defineComponent({
     const all: any[] = [];
     const AllMenus = JSON.parse(localStorage.getItem("AllMenus") || "{}");
     for (var i = 0; i < AllMenus.length; i++) {
-      all.push(AllMenus[i].name);
+      ChangedMenus.push(AllMenus[i]);
     }
+    console.log(ChangedMenus);
     for (var j = 0; j < all.length; j++) {
       for (var k = 0; k < MainMenuConfig[0].pages.length; k++) {
-        if (
-          all[j] ==
-          (MainMenuConfig[0].pages[k].heading ||
-            MainMenuConfig[0].pages[k].sectionTitle)
-        ) {
-          ChangedMenus.push(MainMenuConfig[0].pages[k]);
-        }
+        // if (
+        //   all[j] ==
+        //   (MainMenuConfig[0].pages[k].heading ||
+        //     MainMenuConfig[0].pages[k].sectionTitle)
+        // ) {
+        // ChangedMenus.push(MainMenuConfig[0].pages[k]);
+        // }
       }
     }
     onMounted(() => {

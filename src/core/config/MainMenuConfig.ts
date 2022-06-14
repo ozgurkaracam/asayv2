@@ -112,7 +112,7 @@ const DocMenuConfig = [
         svgIcon: "media/icons/duotune/abstract/abs027.svg",
       },
       {
-        sectionTitle: "test menu 3",
+        sectionTitle: "test menu 333",
         svgIcon: "media/icons/duotone/home/tree.svg",
         fontIcon: "bi-sticky",
         sub: [

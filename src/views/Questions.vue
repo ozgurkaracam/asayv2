@@ -76,12 +76,12 @@
                 </p>
 
                 <div v-if="!isFinished">
-                  <div className="radio-list">
-                    <label className="radio">
-                      <input type="radio" name="radios1" />
-                      <span></span>Default</label
-                    >
-                  </div>
+                  <!--                  <div className="radio-list" >-->
+                  <!--                    <label className="radio">-->
+                  <!--                      <input type="radio" name="radios1" />-->
+                  <!--                      <span></span>Default</label-->
+                  <!--                    >-->
+                  <!--                  </div>-->
                   <div
                     v-for="(answer, key) in questions[i].answers"
                     v-bind:key="key"

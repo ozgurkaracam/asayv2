@@ -90,22 +90,22 @@ const routes = [
         ],
       },
       {
-        path: "/carbonfootprint/dataInput",
+        path: "/karbon-ayak-izi/veri-girisi",
         name: "Veri Girişi",
         component: () => import("@/views/carbon/DataInput.vue"),
       },
       {
-        path: "/carbonfootprint/setBranch",
+        path: "/karbon-ayak-izi/sube-tanimlama",
         name: "Şube Tanımla",
         component: () => import("@/views/carbon/SetBranch.vue"),
       },
       {
-        path: "/carbonfootprint/setParameter",
+        path: "/karbon-ayak-izi/parametre-tanimlama",
         name: "Parametre Tanımla",
         component: () => import("@/views/carbon/SetParameter.vue"),
       },
       {
-        path: "/carbonfootprint/reporting",
+        path: "/karbon-ayak-izi/raporlama",
         name: "Raporlama",
         component: () => import("@/views/carbon/Reporting.vue"),
       },
@@ -115,7 +115,7 @@ const routes = [
         component: () => import("@/views/carbon/BranchList.vue"),
       },
       {
-        path: "/questions",
+        path: "/teklif-formu",
         name: "Anket",
         component: () => import("@/views/Questions.vue"),
       },
@@ -125,7 +125,7 @@ const routes = [
       //   component: () => import("@/views/apps/customers/GettingStarted.vue"),
       // },
       {
-        path: "/user/users",
+        path: "kullanici-islemleri",
         name: "user-list",
         component: () => import("@/views/apps/users/UserList.vue"),
       },
