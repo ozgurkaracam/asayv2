@@ -4,16 +4,13 @@
       <!--begin::Card title-->
       <div class="card-body">
         <div class="container">
-          <div
-            v-if="resulttable.length > 0"
-            class="table-responsive"
-            style="margin-top: 14rem"
-          >
-            <table class="table">
+          <div v-if="resulttable.length > 0" class="table-responsive">
+            <table class="table" v-if="isFinished">
               <tr>
                 <th colspan="3">Teklif No : {{ teklifNo }}</th>
               </tr>
-
+            </table>
+            <table class="table">
               <tr>
                 <th>Soru Numarası</th>
 
@@ -68,88 +65,90 @@
               {{ finishMessage }}
             </div>
 
-            <div class="card-header">Teklifler</div>
+            <!--            <div class="card-header">Teklifler</div>-->
 
             <div class="card-body">
               <div id="start-box" onLoad="start();"></div>
 
-              <div id="question-box">
+              <div id="question-box" v-if="!isFinished">
                 <p id="question" class="lead">
                   {{ i + 1 }}) {{ questions[i].questionText }}
                 </p>
 
-                <input
-                  type="hidden"
-                  value="<?php echo $a; ?>"
-                  id="user_id"
-                  ref="userId"
-                />
-
-                <div
-                  v-for="(answer, key) in questions[i].answers"
-                  v-bind:key="key"
-                >
-                  <input
-                    v-if="questions[i].type == 'multiple'"
-                    type="checkbox"
-                    :checked="questions[i].selectedAnswer.includes(answer)"
-                    :name="i"
-                    @click="selectAnswer(answer)"
-                  />
-                  {{ answer.text }}
-
-                  <input
-                    v-if="questions[i].type != 'multiple'"
-                    type="radio"
-                    :checked="questions[i].selectedAnswer.includes(answer)"
-                    :name="i"
-                    @click="selectAnswer(answer)"
-                  />
-
+                <div v-if="!isFinished">
+                  <div className="radio-list">
+                    <label className="radio">
+                      <input type="radio" name="radios1" />
+                      <span></span>Default</label
+                    >
+                  </div>
                   <div
-                    v-if="
-                      answer.hasOwnProperty('nestedQuestion') &&
-                      questions[i].selectedAnswer.includes(answer)
-                    "
+                    v-for="(answer, key) in questions[i].answers"
+                    v-bind:key="key"
                   >
-                    <div class="row mb-2">
-                      <div class="col-md-9">
-                        {{ answer.nestedQuestion.question }}
-                      </div>
+                    <input
+                      v-if="questions[i].type == 'multiple'"
+                      type="checkbox"
+                      :checked="questions[i].selectedAnswer.includes(answer)"
+                      :name="i"
+                      @click="selectAnswer(answer)"
+                    />
+                    {{ answer.text }}
 
-                      <div class="col-md-3">
-                        <input
-                          type="number"
-                          required
-                          step="1"
-                          min="1"
-                          :placeholder="answer.nestedQuestion.question"
-                          v-model="answer.nestedQuestion.answer"
-                          class="form-control"
-                        />
+                    <input
+                      v-if="questions[i].type != 'multiple'"
+                      type="radio"
+                      :checked="questions[i].selectedAnswer.includes(answer)"
+                      :name="i"
+                      @click="selectAnswer(answer)"
+                    />
+
+                    <div
+                      v-if="
+                        answer.hasOwnProperty('nestedQuestion') &&
+                        questions[i].selectedAnswer.includes(answer)
+                      "
+                    >
+                      <div class="row mb-2">
+                        <div class="col-md-9">
+                          {{ answer.nestedQuestion.question }}
+                        </div>
+
+                        <div class="col-md-3">
+                          <input
+                            type="number"
+                            required
+                            step="1"
+                            min="1"
+                            :placeholder="answer.nestedQuestion.question"
+                            v-model="answer.nestedQuestion.answer"
+                            class="form-control"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div id="buttons-box">
-                  <!--   :disabled="questions[i].selectedAnswer.length<1 "             -->
+                  <div id="buttons-box">
+                    <!--   :disabled="questions[i].selectedAnswer.length<1 "             -->
 
-                  <button
-                    class="btn btn-success btn-lg"
-                    @click="i == questions.length - 1 ? finish() : next()"
-                  >
-                    <span class="glyphicon glyphicon-ok"></span>
-                    {{ i == questions.length - 1 ? "Bitir" : "İleri" }}
-                  </button>
+                    <button
+                      class="btn btn-success btn-lg"
+                      :disabled="loading"
+                      @click="i == questions.length - 1 ? finish() : next()"
+                    >
+                      <span class="glyphicon glyphicon-ok"></span>
+                      {{ i == questions.length - 1 ? "Bitir" : "İleri" }}
+                    </button>
 
-                  <button
-                    class="btn btn-danger btn-lg"
-                    :disabled="i == 0"
-                    @click="i = i - 1"
-                  >
-                    <span class="glyphicon glyphicon-remove"></span> Geri
-                  </button>
+                    <button
+                      class="btn btn-danger btn-lg"
+                      :disabled="i == 0"
+                      @click="i = i - 1"
+                    >
+                      <span class="glyphicon glyphicon-remove"></span> Geri
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -163,6 +162,7 @@
 <script>
 import { questions } from "@/core/data/questions";
 import axios from "axios";
+import JwtService from "@/core/services/JwtService";
 export default {
   methods: {
     reduced(arr) {
@@ -185,8 +185,6 @@ export default {
 
     finish() {
       this.parseData();
-
-      this.isFinished = 1;
 
       const cevap13 = this.questions[12].selectedAnswer[0].text;
 
@@ -230,8 +228,17 @@ export default {
     },
 
     postData(data) {
+      this.loading = true;
       axios
-        .post("https://pregnancytesthome.com/api/service", { data: data })
+        .post(
+          "questions",
+          { data: data },
+          {
+            headers: {
+              Authorization: `Bearer ${JwtService.getToken()}`,
+            },
+          }
+        )
         .then((data) => {
           this.resulttable = this.questions
             .filter((question) => {
@@ -257,7 +264,11 @@ export default {
               };
             });
 
-          this.teklifNo = data.data.teklifNo;
+          this.teklifNo = data.data.teklif._id;
+        })
+        .finally((r) => {
+          this.isFinished = 1;
+          this.loading = false;
         });
     },
 
@@ -410,7 +421,7 @@ export default {
       resultData: [],
 
       questions: questions,
-
+      loading: false,
       test: "test",
 
       teklifNo: 0,
@@ -430,13 +441,5 @@ export default {
 
 .btn-danger {
   margin-top: 10%;
-}
-
-.col-md-9 {
-  margin-top: 4%;
-}
-
-.col-md-3 {
-  margin-top: 4%;
 }
 </style>
