@@ -65,65 +65,59 @@
               {{ finishMessage }}
             </div>
 
-            <!--            <div class="card-header">Teklifler</div>-->
-
             <div class="card-body">
               <div id="start-box" onLoad="start();"></div>
 
               <div id="question-box" v-if="!isFinished">
-                <p id="question" class="lead">
+                <p id="question" class="header-text">
                   {{ i + 1 }}) {{ questions[i].questionText }}
                 </p>
 
                 <div v-if="!isFinished">
-                  <!--                  <div className="radio-list" >-->
-                  <!--                    <label className="radio">-->
-                  <!--                      <input type="radio" name="radios1" />-->
-                  <!--                      <span></span>Default</label-->
-                  <!--                    >-->
-                  <!--                  </div>-->
                   <div
                     v-for="(answer, key) in questions[i].answers"
                     v-bind:key="key"
+                    class="question-text"
                   >
                     <input
                       v-if="questions[i].type == 'multiple'"
                       type="checkbox"
+                      class="checkbox"
+                      :checked="questions[i].selectedAnswer.includes(answer)"
+                      :name="i"
+                      @click="selectAnswer(answer)"
+                    />
+                    <input
+                      v-if="questions[i].type != 'multiple'"
+                      type="radio"
+                      class="radio"
                       :checked="questions[i].selectedAnswer.includes(answer)"
                       :name="i"
                       @click="selectAnswer(answer)"
                     />
                     {{ answer.text }}
-
-                    <input
-                      v-if="questions[i].type != 'multiple'"
-                      type="radio"
-                      :checked="questions[i].selectedAnswer.includes(answer)"
-                      :name="i"
-                      @click="selectAnswer(answer)"
-                    />
-
                     <div
                       v-if="
                         answer.hasOwnProperty('nestedQuestion') &&
                         questions[i].selectedAnswer.includes(answer)
                       "
                     >
-                      <div class="row mb-2">
-                        <div class="col-md-9">
+                      <div class="row mt-4 ml-3 mobil">
+                        <div class="col-md-6">
                           {{ answer.nestedQuestion.question }}
                         </div>
-
-                        <div class="col-md-3">
-                          <input
-                            type="number"
-                            required
-                            step="1"
-                            min="1"
-                            :placeholder="answer.nestedQuestion.question"
-                            v-model="answer.nestedQuestion.answer"
-                            class="form-control"
-                          />
+                        <div class="col-md-3 form-group mobil-opt">
+                          <div class="mobil">
+                            <input
+                              type="number"
+                              required
+                              step="1"
+                              min="1"
+                              :placeholder="answer.nestedQuestion.question"
+                              v-model="answer.nestedQuestion.answer"
+                              class="form-control"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -133,7 +127,7 @@
                     <!--   :disabled="questions[i].selectedAnswer.length<1 "             -->
 
                     <button
-                      class="btn btn-success btn-lg"
+                      class="btn btn-success btn-lg py-2 mt-5"
                       :disabled="loading"
                       @click="i == questions.length - 1 ? finish() : next()"
                     >
@@ -142,7 +136,7 @@
                     </button>
 
                     <button
-                      class="btn btn-danger btn-lg"
+                      class="btn btn-danger btn-lg py-2 ml-2 mt-5"
                       :disabled="i == 0"
                       @click="i = i - 1"
                     >
@@ -441,5 +435,180 @@ export default {
 
 .btn-danger {
   margin-top: 10%;
+}
+.header-text {
+  font-size: 25px;
+}
+
+.question-text {
+  font-size: 20px;
+  display: flex;
+}
+
+/*radion & checkbox button*/
+.main--checkbox {
+  position: relative;
+  margin: 1rem;
+}
+
+.radio {
+  position: relative;
+  margin: 0.7rem 1rem 0 0;
+  cursor: pointer;
+}
+
+.radio:before {
+  -webkit-transition: -webkit-transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
+  -moz-transition: -moz-transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
+  transition: transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
+  -webkit-transform: scale(0, 0);
+  -moz-transform: scale(0, 0);
+  -ms-transform: scale(0, 0);
+  -o-transform: scale(0, 0);
+  transform: scale(0, 0);
+  content: "";
+  bottom: 0.15rem;
+  position: absolute;
+  z-index: 1;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #1bc5bd;
+  border-radius: 50%;
+}
+
+.radio:checked:before {
+  -webkit-transform: scale(1, 1);
+  -moz-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  -o-transform: scale(1, 1);
+  transform: scale(1, 1);
+}
+
+.radio:after {
+  content: "";
+  position: absolute;
+  top: -0.05rem;
+  left: -0.1rem;
+  width: 1rem;
+  height: 1rem;
+  background: #fff;
+  border: 1px solid #000000;
+  border-radius: 50%;
+}
+
+.checkbox {
+  position: relative;
+  top: -0.2rem;
+  margin: 0.7rem 1rem 0 0;
+  cursor: pointer;
+}
+
+.checkbox:before {
+  -webkit-transition: -webkit-transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
+  -moz-transition: -moz-transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
+  transition: transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
+  -webkit-transform: rotate(-45deg) scale(0, 0);
+  -moz-transform: rotate(-45deg) scale(0, 0);
+  -ms-transform: rotate(-45deg) scale(0, 0);
+  -o-transform: rotate(-45deg) scale(0, 0);
+  transform: rotate(-45deg) scale(0, 0);
+  content: "";
+  position: absolute;
+  left: 0.1875rem;
+  top: 0.125rem;
+  z-index: 1;
+  width: 0.75rem;
+  height: 0.375rem;
+  border: 2px solid #1bc5bd;
+  border-top-style: none;
+  border-right-style: none;
+}
+
+.checkbox:checked:before {
+  -webkit-transform: rotate(-45deg) scale(1, 1);
+  -moz-transform: rotate(-45deg) scale(1, 1);
+  -ms-transform: rotate(-45deg) scale(1, 1);
+  -o-transform: rotate(-45deg) scale(1, 1);
+  transform: rotate(-45deg) scale(1, 1);
+}
+
+.checkbox:after {
+  content: "";
+  position: absolute;
+  top: -0.125rem;
+  left: 0;
+  width: 1rem;
+  height: 1rem;
+  background: #fff;
+  border: 1px solid #000000;
+  cursor: pointer;
+}
+
+/*İnput-CSS*/
+input[type="number"],
+textarea {
+  outline: none;
+  box-shadow: none !important;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+  border-radius: 0;
+  width: 100%;
+}
+
+label {
+  opacity: 0;
+  position: absolute;
+  top: -20px;
+  left: 0;
+}
+
+.form-control:focus + label {
+  opacity: 1;
+  left: 12px;
+  transition: 0.3s ease;
+}
+
+.form-control:valid + label {
+  opacity: 1;
+  left: 10px;
+  transition: 0.3s ease;
+  color: #00bdaa;
+}
+
+.form-control:valid {
+  border-bottom: 2px solid #00bdaa;
+  transition: 0.3s ease;
+}
+
+@media only screen and (max-width: 600px) {
+  .form-control {
+    border: 1px solid #000;
+    width: 5rem;
+    font-size: 20px;
+  }
+
+  .mobil-opt {
+    height: 5rem;
+  }
+
+  .mobil {
+    margin: 2rem 0 0 0;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .form-control {
+    border: 1px solid #000;
+    width: 5rem;
+    font-size: 20px;
+  }
+
+  .mobil-opt {
+    height: 5rem;
+  }
+
+  .mobil {
+    margin: 5rem auto;
+  }
 }
 </style>

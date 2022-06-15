@@ -16,7 +16,7 @@
           href="https://techasay.com/"
           target="_blank"
           class="text-gray-800 text-hover-primary"
-          >techasaY</a
+          >Elwiot</a
         >
       </div>
       <!--end::Copyright-->
