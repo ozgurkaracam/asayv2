@@ -17,6 +17,7 @@ enum Actions {
   ADD_USER = "users",
   ADD_MENU = "users/addmenu",
   GET_BRANCHES = "branches",
+  GET_CURRENT_USER = "getCurrentUser",
 }
 
 enum Mutations {

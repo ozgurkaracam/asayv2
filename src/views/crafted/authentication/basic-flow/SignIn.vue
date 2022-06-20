@@ -133,22 +133,27 @@ export default defineComponent({
       // Send login request
       await store.dispatch(Actions.LOGIN, values);
       const error = store.getters.getErrors;
-
+      let email;
       if (error != "404") {
         Swal.fire({
           title: "Giriş Başarılı!",
-          text: "Kullanıcı bilgileriniz doğrulanmıştır.",
+          text: "Kullanıcı bilgileriniz doğrulanmıştır, Lütfen Bekleyiniz",
           icon: "success",
           buttonsStyling: false,
-          confirmButtonText: "Tamam",
+          showConfirmButton: false,
+          timer: 1500,
           customClass: {
             confirmButton: "btn fw-bold btn-light-primary",
           },
         }).then(function () {
+          email = store.getters.currentUser.user.email;
           // Go to page after successfully login
         });
         await store.dispatch(Actions.GET_ALL_MENUS);
-        router.push({ name: "dashboard" });
+        console.log(email);
+        if (email == "bhm.teklif") {
+          router.push({ name: "Anket" });
+        } else router.push({ name: "dashboard" });
       } else {
         Swal.fire({
           title: "Giriş Başarısız!",
@@ -165,7 +170,7 @@ export default defineComponent({
       //Deactivate indicator
       submitButton.value?.removeAttribute("data-kt-indicator");
       // eslint-disable-next-line
-        submitButton.value!.disabled = false;
+      submitButton.value!.disabled = false;
     };
 
     return {

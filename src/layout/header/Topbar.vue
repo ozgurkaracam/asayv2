@@ -16,8 +16,7 @@
       >
         <img src="media/avatars/300-1.jpg" alt="metronic" />
       </div> -->
-
-      <!--<div
+      <div
         class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2"
         id="kt_quick_user_toggle"
         data-kt-menu-trigger="click"
@@ -39,7 +38,7 @@
           }}</span>
         </span>
       </div>
-      <KTUserMenu></KTUserMenu>-->
+      <KTUserMenu></KTUserMenu>
       <!--end::Menu-->
     </div>
     <!--end::User -->
@@ -65,11 +64,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-/*import KTUserMenu from "@/layout/header/partials/UserMenu.vue";*/
+import KTUserMenu from "@/layout/header/partials/UserMenu.vue";
 
 export default defineComponent({
   name: "topbar",
-
+  components: {
+    KTUserMenu,
+  },
   data() {
     return {
       userData: [],
