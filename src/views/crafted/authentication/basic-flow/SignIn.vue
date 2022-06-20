@@ -11,7 +11,7 @@
       <!--begin::Heading-->
       <div class="text-center mb-10">
         <!--begin::Title-->
-        <h1 class="text-dark mb-3">Elwiot Giriş PANELİ</h1>
+        <h1 class="text-dark mb-3">Kullanıcı Girişi</h1>
         <!--end::Title-->
       </div>
       <!--begin::Heading-->
@@ -114,7 +114,7 @@ export default defineComponent({
 
     //Create form validation object
     const login = Yup.object().shape({
-      email: Yup.string().email().required().label("Email"),
+      email: Yup.string().required().label("Text"),
       password: Yup.string().required().label("Password"),
     });
 

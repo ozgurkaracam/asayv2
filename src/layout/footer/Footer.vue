@@ -11,12 +11,12 @@
     >
       <!--begin::Copyright-->
       <div class="text-dark order-2 order-md-1">
-        <span class="text-muted fw-bold me-1">2021&copy;</span>
+        <span class="text-muted fw-bold me-1">2022&copy;</span>
         <a
           href="https://techasay.com/"
           target="_blank"
           class="text-gray-800 text-hover-primary"
-          >techasaY</a
+          >Elwiot</a
         >
       </div>
       <!--end::Copyright-->

@@ -23,6 +23,7 @@
           alt="Logo"
           src="../../../public/media/logos/logo-light.png"
           class="logo"
+          width="150"
         />
       </a>
       <a href="/dashboard" v-if="asideTheme === 'light'">
