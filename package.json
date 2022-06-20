@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "build": "vue-cli-service build",
-        "buildforbackend": "vue-cli-service build && xcopy .\\dist\\ ..\\..\\elwiot-iot\\public\\ /K /E /C /H /Y && xcopy .\\dist\\index.html .\\..\\..\\elwiot-iot\\resources\\views\\app.blade.php /K /H /Y ",
+        "buildforbackend": "vue-cli-service build && xcopy .\\dist\\ ..\\..\\iots\\public\\ /K /E /C /H /Y && xcopy .\\dist\\index.html .\\..\\..\\iots\\resources\\views\\app.blade.php /K /H /Y ",
         "lint": "vue-cli-service lint",
         "rtl": "webpack --config webpack-rtl.config.js",
         "serve": "vue-cli-service serve"

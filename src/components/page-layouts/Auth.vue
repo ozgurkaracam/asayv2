@@ -14,9 +14,9 @@
     </div>
     <div class="d-flex flex-center flex-column-auto p-10">
       <div class="d-flex align-items-center fw-bold fs-6">
-        <a href="#" class="text-white text-hover-warning px-2">Hakkında</a>
-        <a href="#" class="text-white text-hover-warning px-2">İletişim</a>
-        <a href="#" class="text-white text-hover-warning px-2">Bize Ulaşın</a>
+        <a href="#" class="text-white text-hover-warning px-2"></a>
+        <a href="#" class="text-white text-hover-warning px-2"></a>
+        <a href="#" class="text-white text-hover-warning px-2"></a>
       </div>
     </div>
   </div>
