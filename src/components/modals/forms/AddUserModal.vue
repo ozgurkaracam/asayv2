@@ -142,6 +142,17 @@
                 </el-select>
                 <!--end::Input-->
               </div>
+
+              <div class="row mb-7 subBlock justify-content-center">
+                <label class="fw-bold text-muted">Fotoğraf Seçiniz</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  accept="image/*"
+                  @change="onFileChange"
+                />
+                <!--          <input type="text" v-model="type" class="form-control" />-->
+              </div>
               <div class="d-flex flex-column mb-7 fv-row">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
@@ -239,7 +250,7 @@
 
                   <router-link
                     class="btn btn-success btn-sm"
-                    :to="'/sube-ekle'"
+                    :to="'/subeler/sube-ekle'"
                   >
                     Şube Ekle
                   </router-link>
@@ -308,6 +319,7 @@ import cryptoJs from "crypto-js";
 import { Actions } from "@/store/enums/StoreEnums";
 import { useStore } from "vuex";
 import store from "@/store";
+import router from "@/router";
 
 export default {
   name: "add-customer-modal",
@@ -321,6 +333,7 @@ export default {
       menuList: [],
       selectedBranches: [],
       userData: {
+        image: null,
         email: "",
         password: "",
         name: "",
@@ -373,6 +386,12 @@ export default {
     },
   },
   methods: {
+    onFileChange(e) {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length) return;
+      this.userData.image = files[0];
+      console.log(files[0].size);
+    },
     getMenuList() {
       this.menuList = JSON.parse(
         window.localStorage.getItem("AllMenus") || "{}"
@@ -385,6 +404,7 @@ export default {
     submit() {
       let data = new FormData();
       data.append("email", this.userData.email);
+      data.append("image", this.userData.image);
       data.append("password", this.userData.password);
       data.append("name", this.userData.name);
       data.append("branches", this.selectedBranches);
@@ -404,10 +424,15 @@ export default {
             headers: {
               Authorization: `Bearer ${JwtService.getToken()}`,
               Accept: "application/json",
+              "Content-Type": "multipart/formdata",
             },
           })
           .then((first_response) => {
-            if (first_response?.data) {
+            if (
+              first_response?.data &&
+              this.selectedMenu &&
+              this.selectedMenu.length > 0
+            ) {
               menu.append("user_id", first_response.data.user._id);
               menu.append("menu_id", this.selectedMenu);
               axios
@@ -429,11 +454,50 @@ export default {
                         confirmButton: "btn fw-bold btn-light-primary",
                       },
                     }).then(function () {
-                      this.$router.push({ name: "user-list" });
+                      location.reload();
                     });
                   }
                 });
+            } else {
+              this.loading = false;
+              Swal.fire({
+                text: "Kullanıcı başarılı şekilde oluşturulmuştur",
+                icon: "success",
+                buttonsStyling: false,
+                confirmButtonText: "Tamam",
+                customClass: {
+                  confirmButton: "btn fw-bold btn-light-primary",
+                },
+              })
+                .then(function () {
+                  location.reload();
+                })
+                .catch((err) => {
+                  console.log(err.response);
+                  Swal.fire({
+                    text: err.response.data.message,
+                    icon: "success",
+                    buttonsStyling: false,
+                    confirmButtonText: "Tamam",
+                    customClass: {
+                      confirmButton: "btn fw-bold btn-light-primary",
+                    },
+                  });
+                  this.loading = false;
+                });
             }
+          })
+          .catch((err) => {
+            this.loading = false;
+            Swal.fire({
+              text: err.response.data.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Tamam",
+              customClass: {
+                confirmButton: "btn fw-bold btn-light-primary",
+              },
+            });
           });
       } else {
         this.loading = false;

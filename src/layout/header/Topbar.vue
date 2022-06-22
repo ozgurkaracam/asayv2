@@ -33,7 +33,8 @@
           >{{ userData.user.name }}</span
         >
         <span class="symbol symbol-lg-35 symbol-25 symbol-light-success">
-          <span class="symbol-label font-size-h5 font-weight-bold">{{
+          <img :src="userData.user.image" alt="" v-if="userData.user.image" />
+          <span class="symbol-label font-size-h5 font-weight-bold" v-else>{{
             userData.user.name.slice(0, 1).toUpperCase()
           }}</span>
         </span>

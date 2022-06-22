@@ -18,21 +18,29 @@
     <!--begin::Brand-->
     <div class="aside-logo flex-column-auto" id="kt_aside_logo">
       <!--begin::Logo-->
-      <a href="/dashboard" v-if="asideTheme === 'dark'">
+      <router-link to="/anasayfa">
         <img
+          v-if="asideTheme === 'dark'"
           alt="Logo"
           src="../../../public/media/logos/logo-light.png"
           class="logo"
           width="150"
         />
-      </a>
-      <a href="/dashboard" v-if="asideTheme === 'light'">
         <img
+          v-else
           alt="Logo"
           src="../../../public/media/logos/logo-dark.png"
           class="logo"
         />
-      </a>
+      </router-link>
+      <!--      <a href="/anasayfa" v-if="asideTheme === 'dark'"> </a>-->
+      <!--      <a href="/anasayfa" v-if="asideTheme === 'light'">-->
+      <!--        <img-->
+      <!--          alt="Logo"-->
+      <!--          src="../../../public/media/logos/logo-dark.png"-->
+      <!--          class="logo"-->
+      <!--        />-->
+      <!--      </a>-->
       <!--end::Logo-->
 
       <!--begin::Aside toggler-->

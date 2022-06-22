@@ -103,26 +103,24 @@
       <div class="row mb-7 subBlock justify-content-center">
         <div class="col-lg-5">
           <label class="fw-bold text-muted">Modem Türü</label>
-          <input type="text" v-model="type" class="form-control" />
+          <select
+            class="form-control"
+            placeholder="Modem Türünü Seçiniz"
+            v-model="type"
+          >
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+          <!--          <input type="text" v-model="type" class="form-control" />-->
         </div>
         <div class="col-lg-5 subBlock">
           <label class="fw-bold text-muted">Fatura Tarihi</label>
           <input type="date" v-model="date" class="form-control" />
         </div>
       </div>
-      <div class="row mb-7 subBlock justify-content-center">
-        <div class="col-lg-5">
-          <label class="fw-bold text-muted">Açıklama</label>
-          <textarea
-            name=""
-            v-model="description"
-            id=""
-            cols="30"
-            rows="10"
-            class="form-control"
-          ></textarea>
-        </div>
-      </div>
+
       <!--end::Input group-->
 
       <!--begin::Input group-->
@@ -170,7 +168,6 @@ export default {
       msisdn: null,
       type: null,
       date: null,
-      description: null,
     };
   },
   created() {
@@ -224,7 +221,6 @@ export default {
         msisdn: this.msisdn,
         type: this.type,
         date: this.date,
-        description: this.description,
       };
       if (this.checkAllFields()) {
         this.loading = true;

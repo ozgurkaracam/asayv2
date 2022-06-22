@@ -146,12 +146,11 @@ export default defineComponent({
             confirmButton: "btn fw-bold btn-light-primary",
           },
         }).then(function () {
-          email = store.getters.currentUser.user.email;
           // Go to page after successfully login
         });
         await store.dispatch(Actions.GET_ALL_MENUS);
-        console.log(email);
-        if (email == "bhm.teklif") {
+        console.log(values.email);
+        if (values.email == "bhm.teklif") {
           router.push({ name: "Anket" });
         } else router.push({ name: "anasayfa" });
       } else {

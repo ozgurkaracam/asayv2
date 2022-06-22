@@ -118,8 +118,8 @@ export default defineComponent({
     const router = useRouter();
 
     const submitButton = ref<HTMLButtonElement | null>(null);
-    const emaill = ref("");
-    const password = ref("");
+    const emaill = ref<string>("");
+    const password = ref<string>("");
 
     //Create form validation object
     const login = Yup.object().shape({
@@ -145,7 +145,7 @@ export default defineComponent({
         password: password.value,
       });
       const error = store.getters.getErrors;
-      let email;
+      let email = "test";
       if (error != "404") {
         Swal.fire({
           title: "Giriş Başarılı!",
@@ -158,12 +158,10 @@ export default defineComponent({
             confirmButton: "btn fw-bold btn-light-primary",
           },
         }).then(function () {
-          email = store.getters.currentUser.user.email;
           // Go to page after successfully login
         });
         await store.dispatch(Actions.GET_ALL_MENUS);
-        console.log(email);
-        if (email == "bhm.teklif") {
+        if (emaill.value == "bhm.teklif") {
           router.push({ name: "Anket" });
         } else router.push({ name: "anasayfa" });
       } else {
