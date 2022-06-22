@@ -118,6 +118,84 @@
               <div class="d-flex flex-column mb-7 fv-row">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Kullanıcı Tipi</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Kullanıcı tipi"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-select
+                  v-model="userData.userType"
+                  placeholder="Lütfen seçim yapınız"
+                >
+                  <el-option
+                    v-for="item in userTypes"
+                    :key="item.id"
+                    :label="item.label"
+                    :value="item.id"
+                  />
+                </el-select>
+                <!--end::Input-->
+              </div>
+              <div class="d-flex flex-column mb-7 fv-row">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">İl</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Lütfen İl Giriniz"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-select v-model="city_id" placeholder="Lütfen seçim yapınız">
+                  <el-option
+                    v-for="item in cities"
+                    :key="item._id"
+                    :label="item.name"
+                    :value="item._id"
+                  />
+                </el-select>
+                <!--end::Input-->
+              </div>
+              <div class="d-flex flex-column mb-7 fv-row">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">İlçe</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Lütfen İlçe Giriniz"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-select
+                  v-model="state_id"
+                  placeholder="Lütfen seçim yapınız"
+                >
+                  <el-option
+                    v-for="item in states"
+                    :key="item._id"
+                    :label="item.name"
+                    :value="item._id"
+                  />
+                </el-select>
+                <!--end::Input-->
+              </div>
+              <div class="d-flex flex-column mb-7 fv-row">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
                   <span class="required">Kullanıcıya tanımlanacak menüler</span>
 
                   <i
@@ -137,6 +215,45 @@
                 >
                   <el-option
                     v-for="item in menuList"
+                    :key="item._id"
+                    :label="item.name"
+                    :value="item._id"
+                  />
+                </el-select>
+                <!--end::Input-->
+              </div>
+              <div class="d-flex flex-column mb-7 fv-row">
+                <!--begin::Label-->
+                <div class="d-flex justify-content-between align-items-center">
+                  <label class="fs-6 fw-bold mb-2">
+                    <span class="required"
+                      >Kullanıcıya tanımlanacak Şubeler</span
+                    >
+
+                    <i
+                      class="fas fa-exclamation-circle ms-1 fs-7"
+                      data-bs-toggle="tooltip"
+                      title="Kullanıcının işlem yapabileceği Şubeler buradan tanımlanmaktadır"
+                    ></i>
+                  </label>
+
+                  <router-link
+                    class="btn btn-success btn-sm"
+                    :to="'/sube-ekle'"
+                  >
+                    Şube Ekle
+                  </router-link>
+                </div>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-select
+                  v-model="selectedBranches"
+                  multiple
+                  placeholder="Lütfen seçim yapınız"
+                >
+                  <el-option
+                    v-for="item in branchList"
                     :key="item._id"
                     :label="item.name"
                     :value="item._id"
@@ -188,6 +305,9 @@ import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import VueElementLoading from "vue-element-loading";
 import MainMenuConfig from "@/core/config/MainMenuConfig";
 import cryptoJs from "crypto-js";
+import { Actions } from "@/store/enums/StoreEnums";
+import { useStore } from "vuex";
+import store from "@/store";
 
 export default {
   name: "add-customer-modal",
@@ -199,15 +319,38 @@ export default {
       loading: false,
       selectedMenu: [],
       menuList: [],
+      selectedBranches: [],
       userData: {
         email: "",
         password: "",
         name: "",
+        userType: 0,
       },
+      branchList: [],
+      userTypes: [
+        {
+          id: 0,
+          label: "Bireysel",
+        },
+        {
+          id: 1,
+          label: "Kurumsal",
+        },
+      ],
+      cities: [],
+      states: [],
+      city_id: null,
+      state_id: null,
     };
   },
   created() {
     this.getMenuList();
+
+    useStore()
+      .dispatch(Actions.GET_CITIES)
+      .then((cities) => {
+        this.cities = cities;
+      });
   },
   computed: {
     getSelectedMenus() {
@@ -218,18 +361,36 @@ export default {
       return this.selectedMenu;
     },
   },
+  watch: {
+    city_id() {
+      store
+        .dispatch(Actions.GET_DISTRICTS, {
+          id: this.city_id,
+        })
+        .then((districts) => {
+          this.states = districts;
+        });
+    },
+  },
   methods: {
     getMenuList() {
       this.menuList = JSON.parse(
         window.localStorage.getItem("AllMenus") || "{}"
       );
-      console.log("MenuList", this.menuList);
+
+      this.branchList = JSON.parse(
+        window.localStorage.getItem("AllBranches")
+      ).data;
     },
     submit() {
       let data = new FormData();
       data.append("email", this.userData.email);
       data.append("password", this.userData.password);
       data.append("name", this.userData.name);
+      data.append("branches", this.selectedBranches);
+      data.append("type", this.userData.userType);
+      data.append("city_id", this.city_id);
+      data.append("state_id", this.state_id);
       let menu = new FormData();
       this.loading = true;
       if (

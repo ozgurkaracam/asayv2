@@ -27,6 +27,10 @@ export default class ApiModule extends VuexModule implements MenuInfo {
     },
   };
 
+  get getAllBranches() {
+    return this.getBranches;
+  }
+
   get getAllMenus() {
     return this.callMenus;
   }

@@ -18,6 +18,8 @@ enum Actions {
   ADD_MENU = "users/addmenu",
   GET_BRANCHES = "branches",
   GET_CURRENT_USER = "getCurrentUser",
+  GET_CITIES = "getCities",
+  GET_DISTRICTS = "getDistricts",
 }
 
 enum Mutations {

@@ -101,6 +101,18 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
   [Actions.LOGOUT]() {
     this.context.commit(Mutations.PURGE_AUTH);
   }
+  @Action({ rawError: true })
+  [Actions.GET_CITIES](credentials) {
+    return ApiService.get("cities").then(({ data }) => {
+      return data.cities;
+    });
+  }
+  @Action({ rawError: true })
+  [Actions.GET_DISTRICTS](payload) {
+    return ApiService.get(`districts/${payload.id}`).then(({ data }) => {
+      return data.districts;
+    });
+  }
 
   // @Action
   // [Actions.REGISTER](credentials) {

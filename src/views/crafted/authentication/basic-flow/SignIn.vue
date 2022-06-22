@@ -153,7 +153,7 @@ export default defineComponent({
         console.log(email);
         if (email == "bhm.teklif") {
           router.push({ name: "Anket" });
-        } else router.push({ name: "dashboard" });
+        } else router.push({ name: "anasayfa" });
       } else {
         Swal.fire({
           title: "Giriş Başarısız!",

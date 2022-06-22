@@ -6,12 +6,12 @@ import JwtService from "@/core/services/JwtService";
 const routes = [
   {
     path: "/",
-    redirect: "/dashboard",
+    redirect: "/anasayfa",
     component: () => import("@/layout/Layout.vue"),
     children: [
       {
-        path: "/dashboard",
-        name: "dashboard",
+        path: "/anasayfa",
+        name: "anasayfa",
         component: () => import("@/views/Dashboard.vue"),
       },
       {
@@ -93,6 +93,28 @@ const routes = [
         path: "/karbon-ayak-izi/veri-girisi",
         name: "Veri Girişi",
         component: () => import("@/views/carbon/DataInput.vue"),
+      },
+
+      {
+        path: "/subeler/sube-ekle",
+        name: "/subeler/sube-ekle",
+        component: () => import("@/views/AddBranch.vue"),
+      },
+      {
+        path: "/subeler/sube-listesi",
+        name: "/subeler/sube-listesi",
+        component: () => import("@/views/Branchs.vue"),
+      },
+
+      {
+        path: "/modemler/modem-ekle",
+        name: "/modemler/modem-ekle",
+        component: () => import("@/views/AddModem.vue"),
+      },
+      {
+        path: "/modemler/modem-listele",
+        name: "/modemler/modem-listele",
+        component: () => import("@/views/Modems.vue"),
       },
       {
         path: "/karbon-ayak-izi/sube-tanimlama",
@@ -272,6 +294,11 @@ const routes = [
     ],
   },
   {
+    path: "/login",
+    name: "login",
+    component: () => import("@/views/Login.vue"),
+  },
+  {
     path: "/",
     component: () => import("@/components/page-layouts/Auth.vue"),
     children: [
@@ -318,8 +345,8 @@ const router = createRouter({
 });
 
 router.beforeEach((to, _, next) => {
-  const authRequiredRoutes = ["dashboard"];
-  const authNotRequiredRoutes = ["sign-in"];
+  const authRequiredRoutes = ["anasayfa"];
+  const authNotRequiredRoutes = ["sign-in", "login"];
   const _isAuthenticated = store.getters.isUserAuthenticated;
 
   if (authNotRequiredRoutes.indexOf(to.name) > -1 && _isAuthenticated)
