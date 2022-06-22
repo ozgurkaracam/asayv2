@@ -455,7 +455,7 @@ export default {
 
       dialog: false,
 
-      i: 4,
+      i: 0,
 
       selectedAnswer: null,
 
@@ -467,10 +467,6 @@ export default {
 
       teklifNo: 0,
     };
-  },
-
-  computed() {
-    alert("test");
   },
 };
 </script>

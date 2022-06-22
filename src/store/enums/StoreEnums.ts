@@ -20,6 +20,7 @@ enum Actions {
   GET_CURRENT_USER = "getCurrentUser",
   GET_CITIES = "getCities",
   GET_DISTRICTS = "getDistricts",
+  GET_PARAMETERS = "getParameters",
 }
 
 enum Mutations {

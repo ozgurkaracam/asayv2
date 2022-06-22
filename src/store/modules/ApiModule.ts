@@ -2,6 +2,7 @@ import ApiService from "@/core/services/ApiService";
 import JwtService from "@/core/services/JwtService";
 import { Actions, Mutations } from "@/store/enums/StoreEnums";
 import { Module, Action, Mutation, VuexModule } from "vuex-module-decorators";
+import axios from "axios";
 
 export interface Menu {
   _id: string;
@@ -51,7 +52,7 @@ export default class ApiModule extends VuexModule implements MenuInfo {
   }
   @Mutation
   [Mutations.SET_BRANCHES](data) {
-    this.getBranches = data;
+    this.getBranches = data.data;
   }
 
   @Action({ rawError: true })

@@ -118,8 +118,8 @@ export default defineComponent({
     const router = useRouter();
 
     const submitButton = ref<HTMLButtonElement | null>(null);
-    const emaill = ref("test");
-    const password = ref("test");
+    const emaill = ref("");
+    const password = ref("");
 
     //Create form validation object
     const login = Yup.object().shape({

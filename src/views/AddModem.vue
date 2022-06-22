@@ -14,7 +14,7 @@
     <!--begin::Card body-->
     <div class="card-body p-9">
       <vue-element-loading
-        :active="loading"
+        :active="branchess.length < 1"
         spinner="ring"
         color="#FF6700"
         text="Lütfen bekleyiniz..."
@@ -23,7 +23,7 @@
       <!--begin::Input group-->
       <div class="row mb-7 subBlock justify-content-center">
         <div class="col-lg-5">
-          <label class="fw-bold text-muted">Modem Adı</label>
+          <label class="fw-bold text-muted required">Modem Adı</label>
           <input type="text" v-model="name" class="form-control" />
         </div>
 
@@ -47,7 +47,7 @@
             multiple
           >
             <el-option
-              v-for="item in branches"
+              v-for="item in branchess"
               :key="item._id"
               :label="item.name"
               :value="item._id"
@@ -62,7 +62,7 @@
       <!--begin::Input group-->
       <div class="row mb-7 subBlock justify-content-center">
         <div class="col-lg-5">
-          <label class="fw-bold text-muted">Seri Numarası</label>
+          <label class="fw-bold text-muted required">Seri Numarası</label>
           <input type="text" v-model="serino" class="form-control" />
         </div>
         <div class="col-lg-5 subBlock">
@@ -147,6 +147,8 @@ import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import store from "@/store";
 import regions from "@/core/data/regions";
+import router from "@/router";
+import ApiModule from "@/store/modules/ApiModule";
 
 export default {
   name: "account-overview",
@@ -172,7 +174,7 @@ export default {
     };
   },
   created() {
-    this.getAllBranches();
+    // this.getAllBranches();
   },
   methods: {
     getAllBranches() {
@@ -193,17 +195,17 @@ export default {
       if (
         this.name &&
         this.serino &&
-        this.gsm &&
-        this.selectedBranch &&
-        this.port &&
-        this.ip &&
-        this.imei &&
-        this.sim &&
-        this.gsmno &&
-        this.msisdn &&
-        this.type &&
-        this.date &&
-        this.description
+        // this.gsm &&
+        this.selectedBranch
+        // this.port &&
+        // this.ip &&
+        // this.imei &&
+        // this.sim &&
+        // this.gsmno &&
+        // this.msisdn &&
+        // this.type &&
+        // this.date &&
+        // this.description
       ) {
         return true;
       } else return false;
@@ -224,7 +226,7 @@ export default {
         date: this.date,
         description: this.description,
       };
-      if (true) {
+      if (this.checkAllFields()) {
         this.loading = true;
         axios
           .post("modems", data, {
@@ -242,11 +244,12 @@ export default {
                 icon: "success",
                 buttonsStyling: false,
                 confirmButtonText: "Tamam",
+                timer: 1000,
                 customClass: {
                   confirmButton: "btn fw-bold btn-light-primary",
                 },
               }).then(function () {
-                window.location.reload();
+                router.replace({ path: "/modemler/modem-listele" });
               });
             }
           });
@@ -262,6 +265,11 @@ export default {
           },
         });
       }
+    },
+  },
+  computed: {
+    branchess() {
+      return store.getters.getAllBranches;
     },
   },
   mounted() {
