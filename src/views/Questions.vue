@@ -3,6 +3,12 @@
     <div class="card-header border-0 pt-6">
       <!--begin::Card title-->
       <div class="card-body">
+        <vue-element-loading
+          :active="loading"
+          spinner="ring"
+          color="#FF6700"
+          text="Lütfen bekleyiniz..."
+        />
         <div class="container">
           <div v-if="resulttable.length > 0" class="table-responsive">
             <table class="table" v-if="isFinished">
@@ -455,7 +461,7 @@ export default {
 
       dialog: false,
 
-      i: 0,
+      i: 12,
 
       selectedAnswer: null,
 
