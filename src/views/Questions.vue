@@ -461,7 +461,7 @@ export default {
 
       dialog: false,
 
-      i: 12,
+      i: 0,
 
       selectedAnswer: null,
 
