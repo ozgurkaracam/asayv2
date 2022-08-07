@@ -163,6 +163,8 @@ export default defineComponent({
         await store.dispatch(Actions.GET_ALL_MENUS);
         if (emaill.value == "bhm.teklif") {
           router.push({ name: "Anket" });
+        } else if (emaill.value == "bhm.admin") {
+          router.push({ name: "Teklif Formları" });
         } else router.push({ name: "anasayfa" });
       } else {
         Swal.fire({

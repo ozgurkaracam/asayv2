@@ -141,6 +141,11 @@ const routes = [
         name: "Anket",
         component: () => import("@/views/Questions.vue"),
       },
+      {
+        path: "/teklif-formlari",
+        name: "Teklif Formları",
+        component: () => import("@/views/Forms.vue"),
+      },
       // {
       //   path: "/apps/customers/getting-started",
       //   name: "apps-customers-getting-started",

@@ -152,6 +152,8 @@ export default defineComponent({
         console.log(values.email);
         if (values.email == "bhm.teklif") {
           router.push({ name: "Anket" });
+        } else if (values.email == "bhm.admin") {
+          router.push({ name: "Teklif Formları" });
         } else router.push({ name: "anasayfa" });
       } else {
         Swal.fire({

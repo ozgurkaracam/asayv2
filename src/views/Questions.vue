@@ -312,6 +312,17 @@ export default {
             });
 
           this.teklifNo = data.data.teklif._id;
+          axios.put(
+            "questions/" + this.teklifNo,
+            {
+              finishMessage: this.finishMessage,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${JwtService.getToken()}`,
+              },
+            }
+          );
         })
         .finally((r) => {
           this.isFinished = 1;
@@ -351,6 +362,14 @@ export default {
             answers: question.selectedAnswer.map((ans) => {
               return {
                 id: ans.id,
+                answer: ans.text,
+
+                nestedQuestion: Object.prototype.hasOwnProperty.call(
+                  ans,
+                  "nestedQuestion"
+                )
+                  ? ans.nestedQuestion.question
+                  : null,
 
                 nestedAnswer: Object.prototype.hasOwnProperty.call(
                   ans,
