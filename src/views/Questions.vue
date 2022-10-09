@@ -1,158 +1,167 @@
 <template>
-  <div class="card">
-    <div class="card-header border-0 pt-6">
-      <!--begin::Card title-->
-      <div class="card-body">
-        <vue-element-loading
-          :active="loading"
-          spinner="ring"
-          color="#FF6700"
-          text="Lütfen bekleyiniz..."
-        />
-        <div class="container">
-          <div v-if="resulttable.length > 0" class="table-responsive">
-            <table class="table" v-if="isFinished">
-              <tr>
-                <th colspan="3">Teklif No : {{ teklifNo }}</th>
-              </tr>
-            </table>
+  <div>
+    <div class="text-right mb-2">
+      <Flags />
+    </div>
+    <div class="card">
+      <div class="card-header border-0 pt-6">
+        <!--begin::Card title-->
+        <div class="card-body">
+          <vue-element-loading
+            :active="loading"
+            spinner="ring"
+            color="#FF6700"
+            text="Lütfen bekleyiniz..."
+          />
+          <div class="container">
+            <div v-if="resulttable.length > 0" class="table-responsive">
+              <table class="table" v-if="isFinished">
+                <tr>
+                  <th colspan="3">Teklif No : {{ teklifNo }}</th>
+                </tr>
+              </table>
 
-            <div class="alert alert-success" v-if="isFinished">
-              {{ finishMessage }}
-            </div>
+              <div class="alert alert-success" v-if="isFinished">
+                {{ finishMessage }}
+              </div>
 
-            <table class="table">
-              <tr>
-                <th>Soru Numarası</th>
+              <table class="table">
+                <tr>
+                  <th>Soru Numarası</th>
 
-                <th class="d-flex justify-content-between">
-                  <div>Ürünler</div>
+                  <th class="d-flex justify-content-between">
+                    <div>Ürünler</div>
 
-                  <div>Adet</div>
-                </th>
-              </tr>
+                    <div>Adet</div>
+                  </th>
+                </tr>
 
-              <tr v-for="(row, key) in resulttable" v-bind:key="key">
-                <td v-text="row.id"></td>
+                <tr v-for="(row, key) in resulttable" v-bind:key="key">
+                  <td v-text="row.id"></td>
 
-                <td>
-                  <div v-if="row.answers.length > 0">
-                    <div v-if="row.id == 5">
-                      <div class="d-flex justify-content-between">
-                        <div>{{ row.answers[0].tabletext }}</div>
+                  <td>
+                    <div v-if="row.answers.length > 0">
+                      <div v-if="row.id == 5">
+                        <div class="d-flex justify-content-between">
+                          <div>{{ row.answers[0].tabletext }}</div>
 
-                        <div>
-                          <b>{{ reduced(row.answers) }} </b>
+                          <div>
+                            <b>{{ reduced(row.answers) }} </b>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div v-else>
+                        <div
+                          v-for="(answer, key) in row.answers"
+                          v-bind:key="key"
+                        >
+                          <div class="d-flex justify-content-between">
+                            <div>{{ answer.tabletext }}</div>
+
+                            <div>
+                              <b>{{ answer.answer }}</b>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
 
                     <div v-else>
-                      <div
-                        v-for="(answer, key) in row.answers"
-                        v-bind:key="key"
-                      >
-                        <div class="d-flex justify-content-between">
-                          <div>{{ answer.tabletext }}</div>
-
-                          <div>
-                            <b>{{ answer.answer }}</b>
-                          </div>
-                        </div>
-                      </div>
+                      <h4>seçim yapılmadı</h4>
                     </div>
-                  </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
 
-                  <div v-else>
-                    <h4>seçim yapılmadı</h4>
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </div>
+            <div class="card" style="display: block">
+              <div class="card-body">
+                <div id="start-box" onLoad="start();"></div>
 
-          <div class="card" style="display: block">
-            <div class="card-body">
-              <div id="start-box" onLoad="start();"></div>
+                <div id="question-box" v-if="!isFinished">
+                  <p id="question" class="header-text">
+                    {{ i + 1 }}) {{ questions[i].questionText }}
+                  </p>
 
-              <div id="question-box" v-if="!isFinished">
-                <p id="question" class="header-text">
-                  {{ i + 1 }}) {{ questions[i].questionText }}
-                </p>
-
-                <div v-if="!isFinished">
-                  <div
-                    v-for="(answer, key) in questions[i].answers"
-                    v-bind:key="key"
-                    class="question-text"
-                  >
-                    <div class="d-flex">
-                      <input
-                        v-if="questions[i].type == 'multiple'"
-                        type="checkbox"
-                        class="checkbox"
-                        :checked="questions[i].selectedAnswer.includes(answer)"
-                        :name="i"
-                        @click="selectAnswer(answer)"
-                      />
-                      <input
-                        v-if="questions[i].type != 'multiple'"
-                        type="radio"
-                        class="radio"
-                        :checked="questions[i].selectedAnswer.includes(answer)"
-                        :name="i"
-                        @click="selectAnswer(answer)"
-                      />
-                      {{ answer.text }}
-                    </div>
+                  <div v-if="!isFinished">
                     <div
-                      v-if="
-                        answer.hasOwnProperty('nestedQuestion') &&
-                        questions[i].selectedAnswer.includes(answer)
-                      "
+                      v-for="(answer, key) in questions[i].answers"
+                      v-bind:key="key"
+                      class="question-text"
                     >
-                      <div class="row mt-4 ml-3 mobil">
-                        <div class="col-md-6">
-                          {{ answer.nestedQuestion.question }}
-                        </div>
-                        <div class="col-md-3 form-group mobil-opt">
-                          <div class="mobil">
-                            <input
-                              type="number"
-                              required
-                              step="1"
-                              min="1"
-                              :placeholder="answer.nestedQuestion.question"
-                              v-model="answer.nestedQuestion.answer"
-                              class="form-control"
-                            />
+                      <div class="d-flex">
+                        <input
+                          v-if="questions[i].type == 'multiple'"
+                          type="checkbox"
+                          class="checkbox"
+                          :checked="
+                            questions[i].selectedAnswer.includes(answer)
+                          "
+                          :name="i"
+                          @click="selectAnswer(answer)"
+                        />
+                        <input
+                          v-if="questions[i].type != 'multiple'"
+                          type="radio"
+                          class="radio"
+                          :checked="
+                            questions[i].selectedAnswer.includes(answer)
+                          "
+                          :name="i"
+                          @click="selectAnswer(answer)"
+                        />
+                        {{ answer.text }}
+                      </div>
+                      <div
+                        v-if="
+                          answer.hasOwnProperty('nestedQuestion') &&
+                          questions[i].selectedAnswer.includes(answer)
+                        "
+                      >
+                        <div class="row mt-4 ml-3 mobil">
+                          <div class="col-md-6">
+                            {{ answer.nestedQuestion.question }}
+                          </div>
+                          <div class="col-md-3 form-group mobil-opt">
+                            <div class="mobil">
+                              <input
+                                type="number"
+                                required
+                                step="1"
+                                min="1"
+                                :placeholder="answer.nestedQuestion.question"
+                                v-model="answer.nestedQuestion.answer"
+                                class="form-control"
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div id="buttons-box">
-                    <!--   :disabled="questions[i].selectedAnswer.length<1 "             -->
+                    <div id="buttons-box">
+                      <!--   :disabled="questions[i].selectedAnswer.length<1 "             -->
 
-                    <button
-                      class="btn btn-success btn-lg py-2 mt-5"
-                      :disabled="
-                        loading || questions[i].selectedAnswer.length < 1
-                      "
-                      @click="i == questions.length - 1 ? finish() : next()"
-                    >
-                      <span class="glyphicon glyphicon-ok"></span>
-                      {{ i == questions.length - 1 ? "Bitir" : "İleri" }}
-                    </button>
+                      <button
+                        class="btn btn-success btn-lg py-2 mt-5"
+                        :disabled="
+                          loading || questions[i].selectedAnswer.length < 1
+                        "
+                        @click="i == questions.length - 1 ? finish() : next()"
+                      >
+                        <span class="glyphicon glyphicon-ok"></span>
+                        {{ i == questions.length - 1 ? "Bitir" : "İleri" }}
+                      </button>
 
-                    <button
-                      class="btn btn-danger btn-lg py-2 ml-2 mt-5"
-                      :disabled="i == 0"
-                      @click="i = i - 1"
-                    >
-                      <span class="glyphicon glyphicon-remove"></span> Geri
-                    </button>
+                      <button
+                        class="btn btn-danger btn-lg py-2 ml-2 mt-5"
+                        :disabled="i == 0"
+                        @click="i = i - 1"
+                      >
+                        <span class="glyphicon glyphicon-remove"></span> Geri
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -168,8 +177,10 @@
 import { questions } from "@/core/data/questions";
 import axios from "axios";
 import JwtService from "@/core/services/JwtService";
+import Flags from "@/components/Flags";
 
 export default {
+  components: { Flags },
   methods: {
     reduced(arr) {
       return arr.reduce(function (total, answer) {

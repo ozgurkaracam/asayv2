@@ -1,4 +1,4 @@
-export const questions = [
+export const questionsTR = [
   {
     id: 1,
 
