@@ -90,6 +90,11 @@ const routes = [
         ],
       },
       {
+        path: "/harita",
+        name: "harita",
+        component: () => import("@/views/Map.vue"),
+      },
+      {
         path: "/karbon-ayak-izi/veri-girisi",
         name: "Veri Girişi",
         component: () => import("@/views/carbon/DataInput.vue"),

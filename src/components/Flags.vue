@@ -54,11 +54,6 @@ export default {
           value: "English",
           active: false,
         },
-        {
-          code: "fr",
-          value: "French",
-          active: false,
-        },
       ],
     };
   },
