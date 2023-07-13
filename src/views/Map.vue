@@ -10,15 +10,45 @@
     <!--begin::Card header-->
     <div class="card-header cursor-pointer">
       <!--begin::Card title-->
-      <div class="card-title m-0">
+      <div class="card-title m-0 d-flex">
         <h3 class="fw-bolder m-0">Harita</h3>
+        <button
+          class="btn btn-primary btn-sm float-right ml-5"
+          @click="
+            allOpened = !allOpened;
+
+            locations = locations.map((l) => {
+              return { ...l, opened: allOpened };
+            });
+          "
+        >
+          İsimleri Göster/Gizle
+        </button>
       </div>
       <!--end::Card title-->
     </div>
     <!--begin::Card header-->
 
     <!--begin::Card body-->
-    <div class="card-body p-9">test</div>
+    <div class="card-body p-9">
+      <GMapMap
+        :center="{ lat: 39.925533, lng: 32.866287 }"
+        :zoom="6"
+        map-type-id="terrain"
+        style="width: 100%; height: 500px"
+      >
+        <GMapMarker
+          @click="m.opened = !m.opened"
+          :position="m.position"
+          :key="index"
+          v-for="(m, index) in locations"
+        >
+          <GMapInfoWindow :opened="m.opened">
+            <div>{{ m.name }} - {{ m.location }}</div>
+          </GMapInfoWindow>
+        </GMapMarker>
+      </GMapMap>
+    </div>
   </div>
 </template>
 
@@ -39,6 +69,7 @@ export default {
   data() {
     return {
       region_id: null,
+      allOpened: false,
       branchName: "",
       selectedCity: null,
       citiesAndDistricts: [],
@@ -62,6 +93,7 @@ export default {
       state_id: null,
       regions: regions,
       locations: [],
+      markers: [],
     };
   },
   created() {
@@ -151,7 +183,18 @@ export default {
     requestt
       .get("harita")
       .then((res) => {
-        console.log(res.data.data);
+        this.locations = res.data.data.map((re) => {
+          let te = {
+            ...re,
+            opened: false,
+            position: {
+              lat: parseFloat(re.latitude),
+              lng: parseFloat(re.longitude),
+            },
+          };
+          return te;
+        });
+        console.log(this.markers);
       })
       .catch((e) => {
         console.log("hata var.");

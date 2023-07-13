@@ -10,6 +10,7 @@ import ElementPlus from "element-plus";
 import i18n from "@/core/plugins/i18n";
 import trTR from "element-plus/lib/locale/lang/tr";
 import { Calendar, DatePicker } from "v-calendar";
+import VueGoogleMaps from "@fawmi/vue-google-maps";
 
 //imports for app initialization
 import ApiService from "@/core/services/ApiService";
@@ -28,6 +29,11 @@ const app = createApp(App);
 app.component("VueElementLoading", VueElementLoading);
 app.component("Datepicker", Datepicker);
 app.use(store);
+app.use(VueGoogleMaps, {
+  load: {
+    key: "AIzaSyDOT8470cTN8GDvNJA1QMRixSUw5ePEw1U",
+  },
+});
 app.use(router);
 app.use(ElementPlus, {
   locale: trTR,

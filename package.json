@@ -13,6 +13,7 @@
         "@babel/core": "^7.17.12",
         "@babel/eslint-parser": "^7.17.0",
         "@babel/plugin-proposal-optional-chaining": "^7.17.12",
+        "@fawmi/vue-google-maps": "^0.9.79",
         "@fortawesome/fontawesome-free": "^5.15.4",
         "@fullcalendar/core": "^5.9.0",
         "@fullcalendar/daygrid": "^5.9.0",
