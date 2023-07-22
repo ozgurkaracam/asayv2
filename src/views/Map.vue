@@ -41,10 +41,29 @@
           @click="m.opened = !m.opened"
           :position="m.position"
           :key="index"
+          :scaledSize="{ height: 70, width: 70 }"
+          :icon="{
+            url: m.connection
+              ? iconGreen
+              : 'https://cdn2.iconfinder.com/data/icons/danger-problems-2/512/xxx013-512.png',
+            scaledSize: {
+              width: 25,
+              height: m.connection ? 40 : 30,
+            },
+          }"
           v-for="(m, index) in locations"
         >
           <GMapInfoWindow :opened="m.opened">
-            <div>{{ m.name }} - {{ m.location }}</div>
+            <div>
+              {{ m.name }} - {{ m.location }}
+              {{
+                !m.connection
+                  ? `Bağlantı Yok - Son Tarih: ${moment(
+                      m.connection_down_time
+                    ).format("DD-MM-YYYY HH:mm:ss")}`
+                  : "Bağlantı Var"
+              }}
+            </div>
           </GMapInfoWindow>
         </GMapMarker>
       </GMapMap>
@@ -53,6 +72,7 @@
 </template>
 
 <script>
+import iconGreen from "@/assets/icon_green.svg";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import cities from "@/core/data/cities";
 import axios from "axios";
@@ -63,6 +83,7 @@ import { Actions } from "@/store/enums/StoreEnums";
 import store from "@/store";
 import regions from "@/core/data/regions";
 import requestt from "@/core/data/requestt";
+import moment from "moment";
 export default {
   name: "account-overview",
   components: {},
@@ -72,11 +93,13 @@ export default {
       allOpened: false,
       branchName: "",
       selectedCity: null,
+      iconGreen,
       citiesAndDistricts: [],
       branchList: null,
       loading: null,
       latitude: null,
       longitude: null,
+      moment,
       selectedBranch: null,
       selectedBranchType: null,
       selectedType: null,
@@ -183,6 +206,7 @@ export default {
     requestt
       .get("harita")
       .then((res) => {
+        this.loading = false;
         this.locations = res.data.data.map((re) => {
           let te = {
             ...re,
