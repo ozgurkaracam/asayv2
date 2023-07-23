@@ -20,6 +20,11 @@ const routes = [
         component: () => import("@/views/Builder.vue"),
       },
       {
+        path: "/museums/:id",
+        name: "museums",
+        component: () => import("@/views/Museums.vue"),
+      },
+      {
         path: "/profile",
         name: "profile",
         component: () => import("@/components/page-layouts/Profile.vue"),

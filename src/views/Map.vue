@@ -53,9 +53,9 @@
           }"
           v-for="(m, index) in locations"
         >
-          <GMapInfoWindow :opened="m.opened">
-            <div>
-              {{ m.name }} - {{ m.location }}
+          <GMapInfoWindow :opened="m.opened" @click="goDetail(m._id)">
+            <div style="cursor: pointer" class="text-primary">
+              {{ m.name }} -
               {{
                 !m.connection
                   ? `Bağlantı Yok - Son Tarih: ${moment(
@@ -125,6 +125,9 @@ export default {
   },
   watch: {},
   methods: {
+    goDetail(id) {
+      this.$router.push("/museums/" + id);
+    },
     getAllBranches() {
       this.branchList = JSON.parse(
         window.localStorage.getItem("AllBranches") || "{}"

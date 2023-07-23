@@ -1,4 +1,122 @@
 <template>
+  <div
+    class="modal fade"
+    id="kt_modal_muzes"
+    ref="addUserModalRef"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal-dialog-centered mw-650px">
+      <!--begin::Modal content-->
+      <div class="modal-content">
+        <vue-element-loading
+          :active="loadingMuseums"
+          spinner="ring"
+          color="#FF6700"
+          text="Lütfen bekleyiniz..."
+        />
+        <!--begin::Modal header-->
+        <div class="modal-header" id="kt_modal_muzes_header">
+          <!--begin::Modal title-->
+          <h2 class="fw-bolder">{{ selectedUser?.name }} Müzeler</h2>
+          <!--end::Modal title-->
+
+          <!--begin::Close-->
+          <div
+            id="kt_modal_muzes_close"
+            data-bs-dismiss="modal"
+            class="btn btn-icon btn-sm btn-active-icon-primary"
+          >
+            <span class="svg-icon svg-icon-1">
+              <inline-svg src="media/icons/duotune/arrows/arr061.svg" />
+            </span>
+          </div>
+          <!--end::Close-->
+        </div>
+        <!--end::Modal header-->
+        <!--begin::Form-->
+        <el-form @submit.prevent="submitMuseums(selectedUser._id)">
+          <!--begin::Modal body-->
+          <div class="modal-body py-10 px-lg-17">
+            <!--begin::Scroll-->
+            <div
+              class="scroll-y me-n7 pe-7"
+              id="kt_modal_muzes_scroll"
+              data-kt-scroll="true"
+              data-kt-scroll-activate="{default: false, lg: true}"
+              data-kt-scroll-max-height="auto"
+              data-kt-scroll-dependencies="#kt_modal_muzes_header"
+              data-kt-scroll-wrappers="#kt_modal_muzes_scroll"
+              data-kt-scroll-offset="300px"
+            >
+              <div class="d-flex flex-column mb-7 fv-row">
+                <!--begin::Label-->
+                <label class="fs-6 fw-bold mb-2">
+                  <span class="required">Kullanıcıya tanımlanacak menüler</span>
+
+                  <i
+                    class="fas fa-exclamation-circle ms-1 fs-7"
+                    data-bs-toggle="tooltip"
+                    title="Kullanıcının işlem yapabileceği menüler buradan tanımlanmaktadır"
+                  ></i>
+                </label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-select
+                  v-model="userMuseums"
+                  multiple
+                  placeholder="Lütfen seçim yapınız"
+                  :getMenu="getSelectedMenus"
+                >
+                  <el-option
+                    v-for="item in museums"
+                    :key="item._id"
+                    :label="item.name"
+                    :value="item._id"
+                  />
+                </el-select>
+                <!--end::Input-->
+              </div>
+              <!--begin::Input group-->
+              <!--end::Input group-->
+
+              <!--end::Input group-->
+            </div>
+            <!--end::Scroll-->
+          </div>
+          <!--end::Modal body-->
+
+          <!--begin::Modal footer-->
+          <div class="modal-footer flex-center">
+            <!--begin::Button-->
+            <!-- <button
+              type="reset"
+              id="kt_modal_add_customer_cancel"
+              class="btn btn-light me-3"
+            >
+              Discard
+            </button> -->
+            <!--end::Button-->
+
+            <!--begin::Button-->
+            <button class="btn btn-lg btn-primary" type="submit">
+              <span class="indicator-label">
+                Kaydet
+                <span class="svg-icon svg-icon-3 ms-2 me-0">
+                  <inline-svg src="icons/duotune/arrows/arr064.svg" />
+                </span>
+              </span>
+            </button>
+            <!--end::Button-->
+          </div>
+          <!--end::Modal footer-->
+        </el-form>
+        <!--end::Form-->
+      </div>
+    </div>
+  </div>
   <div class="card">
     <div class="card-header border-0 pt-6">
       <!--begin::Card title-->
@@ -128,6 +246,16 @@
         <template v-slot:cell-created_at="{ row: customer }">
           {{ customer.created_at }}
         </template>
+        <template v-slot:cell-id="{ row: customer }">
+          <button
+            data-bs-toggle="modal"
+            data-bs-target="#kt_modal_muzes"
+            class="btn btn-warning"
+            @click="editMuseums(customer._id)"
+          >
+            Müzeler
+          </button>
+        </template>
         <!-- <template v-slot:cell-actions="{ row: customer }">
           <a
             href="#"
@@ -172,6 +300,7 @@ import AddUserModal from "@/components/modals/forms/AddUserModal.vue";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import { useStore } from "vuex";
 import { Actions, Mutations } from "@/store/enums/StoreEnums";
+import requestt from "@/core/data/requestt";
 
 export default defineComponent({
   name: "user-list",
@@ -180,6 +309,8 @@ export default defineComponent({
     AddUserModal,
   },
   setup() {
+    const loadingMuseums = ref(false);
+    const selectedUser = ref({});
     const checkedCustomers = ref([]);
     const store = useStore();
     const tableHeader = ref([
@@ -213,6 +344,11 @@ export default defineComponent({
         key: "created_at",
         sortable: true,
       },
+      {
+        name: "Actions",
+        key: "id",
+        sortable: true,
+      },
       // {
       //   name: "Actions",
       //   key: "actions",
@@ -226,6 +362,19 @@ export default defineComponent({
     onMounted(() => {
       setCurrentPageBreadcrumbs("Kullanıcı İşlemleri", []);
     });
+    const museums = ref([]);
+    const userMuseums = ref([]);
+    function editMuseums(id) {
+      loadingMuseums.value = true;
+      requestt.get("/users/" + id + "/museums").then((res) => {
+        console.log(res.data);
+        selectedUser.value = res.data.user;
+        museums.value = res.data.museums;
+        userMuseums.value = res.data.data.map((d) => d._id);
+        loadingMuseums.value = false;
+        console.log(museums.value);
+      });
+    }
 
     // const deleteFewCustomers = () => {
     //   checkedCustomers.value.forEach((item) => {
@@ -267,13 +416,30 @@ export default defineComponent({
     //   return false;
     // };
 
+    function submitMuseums(id) {
+      loadingMuseums.value = true;
+      requestt
+        .post(`/users/${id}/museums`, {
+          museums: userMuseums.value,
+        })
+        .then((res) => {
+          loadingMuseums.value = false;
+        });
+    }
+
     return {
       users,
       tableHeader,
       // deleteCustomer,
       search,
+      selectedUser,
+      editMuseums,
+      submitMuseums,
+      loadingMuseums,
       // searchItems,
       checkedCustomers,
+      userMuseums,
+      museums,
       // deleteFewCustomers,
     };
   },
