@@ -52,7 +52,7 @@
           </div>
         </template>
         <div
-          v-if="
+          v-else-if="
             menuItem.name &&
             !menuItem.parent_id &&
             menuItem.submenus &&
@@ -200,7 +200,6 @@ export default defineComponent({
     for (var i = 0; i < AllMenus.length; i++) {
       ChangedMenus.push(AllMenus[i]);
     }
-    console.log(ChangedMenus);
     for (var j = 0; j < all.length; j++) {
       for (var k = 0; k < MainMenuConfig[0].pages.length; k++) {
         // if (

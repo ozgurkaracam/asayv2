@@ -457,6 +457,9 @@ export default {
                       location.reload();
                     });
                   }
+                })
+                .catch((e) => {
+                  this.loading = false;
                 });
             } else {
               this.loading = false;

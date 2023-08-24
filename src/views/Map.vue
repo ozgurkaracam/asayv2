@@ -135,12 +135,10 @@ export default {
     },
     getCities() {
       this.loading = true;
-      useStore()
-        .dispatch(Actions.GET_CITIES)
-        .then((cities) => {
-          this.cities = cities;
-          this.loading = false;
-        });
+      axios.get("https://elwiot.com/api/cities").then((res) => {
+        this.cities = res.data.cities;
+        this.loading = false;
+      });
     },
     checkAllFields() {
       if (

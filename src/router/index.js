@@ -100,6 +100,16 @@ const routes = [
         component: () => import("@/views/Map.vue"),
       },
       {
+        path: "/muzeler",
+        name: "Muzeler",
+        component: () => import("@/views/MuseumsSelect.vue"),
+      },
+      {
+        path: "/raporlama",
+        name: "Reporting",
+        component: () => import("@/views/Reporting.vue"),
+      },
+      {
         path: "/karbon-ayak-izi/veri-girisi",
         name: "Veri Girişi",
         component: () => import("@/views/carbon/DataInput.vue"),

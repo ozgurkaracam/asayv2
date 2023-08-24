@@ -1,0 +1,5 @@
+{
+  "user": "elwiot",
+  "pwd": "Testtest31!",
+  "roles":  [ { "role": "root", "db": "myFirstDatabase" } ]
+}

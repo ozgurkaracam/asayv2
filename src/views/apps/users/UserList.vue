@@ -53,14 +53,32 @@
               <div class="d-flex flex-column mb-7 fv-row">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
-                  <span class="required">Kullanıcıya tanımlanacak menüler</span>
+                  <span class="required">Kullanıcıya tanımlanacak müzeler</span>
 
                   <i
                     class="fas fa-exclamation-circle ms-1 fs-7"
                     data-bs-toggle="tooltip"
-                    title="Kullanıcının işlem yapabileceği menüler buradan tanımlanmaktadır"
+                    title="Kullanıcının işlem yapabileceği müzeler buradan tanımlanmaktadır"
                   ></i>
                 </label>
+                <div class="d-flex my-2">
+                  <button
+                    @click="addAllMuseums('add')"
+                    type="button"
+                    style="flex: 1"
+                    class="btn btn-info ml-2 btn-sm flex-1"
+                  >
+                    Tüm Müzeleri Ata
+                  </button>
+                  <button
+                    @click="addAllMuseums('remove')"
+                    type="button"
+                    style="flex: 1"
+                    class="btn btn-warning ml-2 btn-sm flex-1"
+                  >
+                    Tümünü Temizle
+                  </button>
+                </div>
                 <!--end::Label-->
 
                 <!--begin::Input-->
@@ -427,7 +445,14 @@ export default defineComponent({
         });
     }
 
+    function addAllMuseums(type) {
+      if (type == "add") userMuseums.value = museums.value.map((m) => m._id);
+      else userMuseums.value = [];
+      console.log(museums.value);
+    }
+
     return {
+      addAllMuseums,
       users,
       tableHeader,
       // deleteCustomer,

@@ -19,7 +19,7 @@
     <div class="aside-logo flex-column-auto" id="kt_aside_logo">
       <!--begin::Logo-->
       <router-link to="/anasayfa">
-        <img
+        <!-- <img
           v-if="asideTheme === 'dark'"
           alt="Logo"
           src="../../../public/media/logos/logo-light.png"
@@ -31,7 +31,7 @@
           alt="Logo"
           src="../../../public/media/logos/logo-dark.png"
           class="logo"
-        />
+        /> -->
       </router-link>
       <!--      <a href="/anasayfa" v-if="asideTheme === 'dark'"> </a>-->
       <!--      <a href="/anasayfa" v-if="asideTheme === 'light'">-->
