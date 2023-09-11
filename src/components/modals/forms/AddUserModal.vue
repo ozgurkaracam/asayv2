@@ -115,7 +115,7 @@
                 <!--end::Input-->
               </div>
 
-              <div class="d-flex flex-column mb-7 fv-row">
+              <div class="d-flex flex-column mb-7 fv-row d-none">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
                   <span class="required">Kullanıcı Tipi</span>
@@ -143,7 +143,7 @@
                 <!--end::Input-->
               </div>
 
-              <div class="row mb-7 subBlock justify-content-center">
+              <div class="row mb-7 subBlock justify-content-center d-none">
                 <label class="fw-bold text-muted">Fotoğraf Seçiniz</label>
                 <input
                   type="file"
@@ -153,7 +153,7 @@
                 />
                 <!--          <input type="text" v-model="type" class="form-control" />-->
               </div>
-              <div class="d-flex flex-column mb-7 fv-row">
+              <div class="d-flex flex-column mb-7 fv-row d-none">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
                   <span class="required">İl</span>
@@ -177,7 +177,7 @@
                 </el-select>
                 <!--end::Input-->
               </div>
-              <div class="d-flex flex-column mb-7 fv-row">
+              <div class="d-flex flex-column mb-7 fv-row d-none">
                 <!--begin::Label-->
                 <label class="fs-6 fw-bold mb-2">
                   <span class="required">İlçe</span>
@@ -233,7 +233,7 @@
                 </el-select>
                 <!--end::Input-->
               </div>
-              <div class="d-flex flex-column mb-7 fv-row">
+              <div class="d-flex flex-column mb-7 fv-row d-none">
                 <!--begin::Label-->
                 <div class="d-flex justify-content-between align-items-center">
                   <label class="fs-6 fw-bold mb-2">

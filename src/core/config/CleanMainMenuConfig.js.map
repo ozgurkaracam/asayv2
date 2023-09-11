@@ -1,0 +1,1 @@
+{"version":3,"file":"CleanMainMenuConfig.js","sourceRoot":"","sources":["CleanMainMenuConfig.ts"],"names":[],"mappings":"AAAA,IAAM,aAAa,GAAG;IACpB;QACE,KAAK,EAAE;YACL;gBACE,OAAO,EAAE,UAAU;gBACnB,KAAK,EAAE,YAAY;gBACnB,OAAO,EAAE,oCAAoC;gBAC7C,QAAQ,EAAE,kBAAkB;aAC7B;SACF;KACF;CACF,CAAC;AAEF,eAAe,aAAa,CAAC"}

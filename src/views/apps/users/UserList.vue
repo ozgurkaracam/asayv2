@@ -80,7 +80,14 @@
                   </button>
                 </div>
                 <!--end::Label-->
-
+                <v-select
+                  label="Müzeler"
+                  multiple
+                  :items="museums"
+                  item-title="name"
+                  item-value="_id"
+                  v-model="userMuseums"
+                ></v-select>
                 <!--begin::Input-->
                 <el-select
                   v-model="userMuseums"
@@ -119,7 +126,11 @@
             <!--end::Button-->
 
             <!--begin::Button-->
-            <button class="btn btn-lg btn-primary" type="submit">
+            <button
+              class="btn btn-lg btn-primary"
+              type="submit"
+              @click="submitMuseums(selectedUser._id)"
+            >
               <span class="indicator-label">
                 Kaydet
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
@@ -380,8 +391,8 @@ export default defineComponent({
     onMounted(() => {
       setCurrentPageBreadcrumbs("Kullanıcı İşlemleri", []);
     });
-    const museums = ref([]);
-    const userMuseums = ref([]);
+    const museums = ref<any[]>([]);
+    const userMuseums = ref<any[]>([]);
     function editMuseums(id) {
       loadingMuseums.value = true;
       requestt.get("/users/" + id + "/museums").then((res) => {

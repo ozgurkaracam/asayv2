@@ -23,6 +23,7 @@ import "@vuepic/vue-datepicker/dist/main.css";
 import "@/core/plugins/prismjs";
 import "bootstrap";
 import "v-calendar/dist/style.css";
+import { InstallOptions } from "element-plus/es/utils/config";
 
 const app = createApp(App);
 
@@ -35,15 +36,23 @@ app.use(VueGoogleMaps, {
   },
 });
 app.use(router);
-app.use(ElementPlus, {
-  locale: trTR,
-});
+app.use(ElementPlus, <InstallOptions>{});
+
+// import "vuetify/styles";
+// import { createVuetify } from "vuetify";
+// import * as components from "vuetify/components";
+// import * as directives from "vuetify/directives";
+
+// const vuetify = createVuetify({
+//   components,
+//   directives,
+// });
 
 ApiService.init(app);
 initApexCharts(app);
 initInlineSvg(app);
 initVeeValidate();
-
+// app.use(vuetify);
 app.use(i18n);
 app.component("Calendar", Calendar);
 app.component("DatePicker", DatePicker);

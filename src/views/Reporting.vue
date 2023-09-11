@@ -76,7 +76,20 @@
         <div class="total text-right font-weight-bold" style="font-size: 21px">
           Total: {{ total }}
         </div>
-        <div class="table-responsive">
+
+        <input
+          type="text"
+          placeholder="Ara.."
+          class="form-control mb-3"
+          v-model="searchValue"
+        />
+        <EasyDataTable
+          :headers="headers"
+          :items="datas"
+          :search-field="searchField"
+          :search-value="searchValue"
+        />
+        <!-- <div class="table-responsive">
           <table
             class="table table-hover table-rounded table-striped border gy-7 gs-7"
           >
@@ -98,18 +111,14 @@
               </tr>
             </tbody>
           </table>
-        </div>
+        </div> -->
       </div>
       <div v-else>
         <h2>Kayıt Bulunamadı..</h2>
       </div>
+
       <!-- <div class="table-responsive"> -->
-      <!-- <Datatable
-        ref="table"
-        :table-data="datas"
-        :table-header="tableHeader"
-        :enable-items-per-page-dropdown="true"
-      /> -->
+
       <!-- </div> -->
       <!-- <div class="table-responsive">
         <table
@@ -135,8 +144,8 @@
 
 <script>
 import axios from "axios";
-
-import Datatable from "@/components/kt-datatable/KTDatatable.vue";
+import EasyDataTable from "vue3-easy-data-table";
+import "vue3-easy-data-table/dist/style.css";
 import JwtService from "@/core/services/JwtService";
 import moment from "moment";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
@@ -144,12 +153,93 @@ import requestt from "@/core/data/requestt";
 export default {
   name: "Reporting",
   components: {
-    // Datatable,
+    EasyDataTable,
   },
   data() {
     return {
+      searchField: ["KayitSayisi", "KayitZamani", "MüzeAdi", "EtiketAdi"],
+      searchValue: "",
       total: 0,
-      datas: [],
+      items: [
+        { name: "Curry", height: 178, weight: 77, age: 20 },
+        { name: "James", height: 180, weight: 75, age: 21 },
+        { name: "Jordan", height: 181, weight: 73, age: 22 },
+      ],
+
+      headers: [
+        {
+          text: "Kayıt Sayısı",
+          value: "KayitSayisi",
+          sortable: true,
+        },
+        {
+          text: "Kayıt Zamanı",
+          value: "KayitZamani",
+          sortable: true,
+        },
+        // {
+        //   name: "Payment Method",
+        //   key: "paymentMethod",
+        //   sortingField: "payment.label",
+        //   sortable: true,
+        // },
+        {
+          text: "Müze Adı",
+          value: "MüzeAdi",
+          sortable: true,
+        },
+        {
+          text: "Etiket Adı",
+          value: "EtiketAdi",
+          sortable: true,
+        },
+        // {
+        //   name: "Actions",
+        //   key: "actions",
+        // },
+      ],
+      datas: [
+        {
+          KayitSayisi: "107",
+          KayitZamani: "2023-08-13 13:12:56+03",
+          Qualifier: null,
+          KanalIsmi: "ALN-turnike_sayac_104",
+          MüzeAdi: "Alanya Kalesi\r\r\n",
+          EtiketAdi: "ALN01T04",
+        },
+        {
+          KayitSayisi: "108",
+          KayitZamani: "2023-08-13 13:13:01+03",
+          Qualifier: null,
+          KanalIsmi: "ALN-turnike_sayac_104",
+          MüzeAdi: "Alanya Kalesi\r\r\n",
+          EtiketAdi: "ALN01T04",
+        },
+        {
+          KayitSayisi: "109",
+          KayitZamani: "2023-08-13 13:13:05+03",
+          Qualifier: null,
+          KanalIsmi: "ALN-turnike_sayac_104",
+          MüzeAdi: "Alanya Kalesi\r\r\n",
+          EtiketAdi: "ALN01T04",
+        },
+        {
+          KayitSayisi: "110",
+          KayitZamani: "2023-08-13 13:13:54+03",
+          Qualifier: null,
+          KanalIsmi: "ALN-turnike_sayac_104",
+          MüzeAdi: "Alanya Kalesi\r\r\n",
+          EtiketAdi: "ALN01T04",
+        },
+        {
+          KayitSayisi: "111",
+          KayitZamani: "2023-08-13 13:20:41+03",
+          Qualifier: null,
+          KanalIsmi: "ALN-turnike_sayac_104",
+          MüzeAdi: "Alanya Kalesi\r\r\n",
+          EtiketAdi: "ALN01T04",
+        },
+      ],
       tableHeader: [
         // {
         //   key: "checkbox",
@@ -165,22 +255,12 @@ export default {
           key: "KayitZamani",
           sortable: true,
         },
-        {
-          name: "Qualifier",
-          key: "Qualifier",
-          sortable: true,
-        },
         // {
         //   name: "Payment Method",
         //   key: "paymentMethod",
         //   sortingField: "payment.label",
         //   sortable: true,
         // },
-        {
-          name: "Kanal İsmi",
-          key: "KanalIsmi",
-          sortable: true,
-        },
         {
           name: "Müze Adı",
           key: "MüzeAdi",
@@ -228,7 +308,7 @@ export default {
       requestt
         .get(`excelReport/${muzee.location}`)
         .then((res) => {
-          let link = "https://iot-api.test/publicreport.xlsx";
+          let link = "https://elwiot.com/publicreport.xlsx";
           location.href = link;
           console.log(link);
         })
@@ -291,7 +371,7 @@ export default {
           `excelReport/${muzee.location}?startDate=${this.billBeginDate}&endDate=${this.billEndDate}`
         )
         .then((res) => {
-          let link = "https://iot-api.test/publicreport.xlsx";
+          let link = "https://elwiot.com/publicreport.xlsx";
           location.href = link;
           console.log(link);
         })
@@ -326,3 +406,8 @@ export default {
   },
 };
 </script>
+<style>
+th .header {
+  position: static !important;
+}
+</style>
